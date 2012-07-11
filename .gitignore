@@ -1,0 +1,11 @@
+
+*.csproj.user
+*.ncb
+*.aps
+*.suo
+/SalarDbCodeGenerator/bin
+/SalarDbCodeGenerator/obj
+/SalarDbCodeGenerator.Tests/bin
+/SalarDbCodeGenerator.Tests/obj
+/SampleGenProjects
+/SampleDB
