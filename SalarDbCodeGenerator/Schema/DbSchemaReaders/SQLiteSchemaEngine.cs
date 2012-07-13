@@ -416,48 +416,105 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 					// Fetch the rows
 					foreach (DataRowView keysData in foreignKeysTable.DefaultView)
 					{
-						// table found!
+						// foreign key found!
 						DataRow keyRow = keysData.Row;
 
-						// foreign key
-						DbForeignKey foreignKey = new DbForeignKey()
+						var foreignKeyTableName = keyRow["FKEY_TO_TABLE"].ToString();
+						var primaryKeyTableName = table.TableName;
+
+						var foreignKeyTable = FindTable(tables, foreignKeyTableName);
+						var primaryKeyTable = table;
+
+						if (primaryKeyTable != null)
 						{
-							ForeignKeyName = keyRow["CONSTRAINT_NAME"].ToString(),
-							LocalColumnName = keyRow["FKEY_FROM_COLUMN"].ToString(),
-							ForeignColumnName = keyRow["FKEY_TO_COLUMN"].ToString(),
-							ForeignTableName = keyRow["FKEY_TO_TABLE"].ToString()
-						};
+							// foreign key
+							var foreignKey = new DbForeignKey()
+												{
+													ForeignKeyName = keyRow["CONSTRAINT_NAME"].ToString(),
+													LocalColumnName = keyRow["FKEY_FROM_COLUMN"].ToString(),
+													ForeignColumnName = keyRow["FKEY_TO_COLUMN"].ToString(),
+													ForeignTableName = keyRow["FKEY_TO_TABLE"].ToString(),
+													Multiplicity = DbForeignKey.ForeignKeyMultiplicity.OneToMany
+												};
 
-						// add foreign key
-						table.ForeignKeys.Add(foreignKey);
+							// add foreign key
+							table.ForeignKeys.Add(foreignKey);
 
-						// apply local column
-						DbColumn localColumn = table.FindColumnDb(foreignKey.LocalColumnName);
-						foreignKey.LocalColumn = localColumn;
+							// apply local column
+							DbColumn localColumn = table.FindColumnDb(foreignKey.LocalColumnName);
+							foreignKey.LocalColumn = localColumn;
 
-						//apply foreign table
-						DbTable foreignTable = FindTable(tables, foreignKey.ForeignTableName);
+							//apply foreign table
+							DbTable foreignTable = foreignKeyTable;
 
-						// referenced key
-						if (!localColumn.PrimaryKey)
-						{
-							localColumn.IsReferenceKey = true;
-							localColumn.IsReferenceKeyTable = foreignTable;
+							// referenced key
+							if (!localColumn.PrimaryKey)
+							{
+								localColumn.IsReferenceKey = true;
+								localColumn.IsReferenceKeyTable = foreignTable;
+							}
+
+							if (foreignTable != null)
+							{
+								foreignKey.ForeignTable = foreignTable;
+
+								// apply foreign column
+								DbColumn foreignColumn = foreignTable.FindColumnDb(foreignKey.ForeignColumnName);
+								foreignKey.ForeignColumn = foreignColumn;
+							}
+							else
+							{
+								foreignKey.ForeignTable = null;
+								foreignKey.ForeignColumn = null;
+							}
 						}
 
-						if (foreignTable != null)
+						// adding the relation to the foreign table!
+						if (foreignKeyTable != null)
 						{
-							foreignKey.ForeignTable = foreignTable;
+							// foreign key
+							var oneMultiplicityKey_Foreign = new DbForeignKey()
+							{
+								ForeignKeyName = keyRow["CONSTRAINT_NAME"].ToString(),
+								LocalColumnName = keyRow["FKEY_TO_COLUMN"].ToString(),
+								ForeignColumnName = keyRow["FKEY_FROM_COLUMN"].ToString(),
+								ForeignTableName = primaryKeyTableName,
+								Multiplicity = DbForeignKey.ForeignKeyMultiplicity.ManyToOne
+							};
 
-							// apply foreign column
-							DbColumn foreignColumn = foreignTable.FindColumnDb(foreignKey.ForeignColumnName);
-							foreignKey.ForeignColumn = foreignColumn;
+							// check if it is already there
+							if (foreignKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == oneMultiplicityKey_Foreign.ForeignKeyName))
+								continue;
+
+							// to the list
+							foreignKeyTable.ForeignKeys.Add(oneMultiplicityKey_Foreign);
+
+							// apply local column
+							DbColumn localColumn = foreignKeyTable.FindColumnDb(oneMultiplicityKey_Foreign.LocalColumnName);
+							oneMultiplicityKey_Foreign.LocalColumn = localColumn;
+							if (!localColumn.PrimaryKey)
+							{
+								localColumn.IsReferenceKey = true;
+								localColumn.IsReferenceKeyTable = primaryKeyTable;
+							}
+
+							if (primaryKeyTable != null)
+							{
+								// foreign table of that!
+								oneMultiplicityKey_Foreign.ForeignTable = primaryKeyTable;
+
+								// apply foreign column
+								DbColumn foreignColumn = primaryKeyTable.FindColumnDb(oneMultiplicityKey_Foreign.ForeignColumnName);
+								oneMultiplicityKey_Foreign.ForeignColumn = foreignColumn;
+							}
+							else
+							{
+								oneMultiplicityKey_Foreign.ForeignTable = null;
+								oneMultiplicityKey_Foreign.ForeignColumn = null;
+							}
+
 						}
-						else
-						{
-							foreignKey.ForeignTable = null;
-							foreignKey.ForeignColumn = null;
-						}
+
 					}
 				}
 			}

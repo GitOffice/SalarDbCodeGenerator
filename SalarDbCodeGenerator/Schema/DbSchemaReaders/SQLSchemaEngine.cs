@@ -525,7 +525,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 									}
 								}
 
-								// one-to-one foreign relation will be added
+								// one-to-? foreign relation will be added
 								if (foreignKeyTable != null)
 								{
 									// foreign key many end

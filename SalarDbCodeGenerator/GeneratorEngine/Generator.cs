@@ -1025,7 +1025,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 			// NOTE: foreign keys are always for TABLEs
 			// Checking if user has selected this table
 			// Also checking the option!
-			if (!_optionGenerateUnselectedForeigns && !UserHasSelectedTable(foreignKey.ForeignTable.TableName))
+			if (!_optionGenerateUnselectedForeigns && !UserHasSelectedTable(foreignKey.ForeignTableName))
 			{
 				// User has not selected this foreign table
 				return string.Empty;
