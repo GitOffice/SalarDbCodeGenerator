@@ -6,8 +6,8 @@ using System.Text;
 // ====================================
 // SalarDbCodeGenerator
 // http://SalarDbCodeGenerator.codeplex.com
-// Programmer: Salar Khalilzadeh <salar2k@gmail.com>
-// Copytight(c) 2012, All rights reserved
+// Salar Khalilzadeh <salar2k@gmail.com>
+// © 2012, All rights reserved
 // 2009-9-30
 // ====================================
 namespace SalarDbCodeGenerator

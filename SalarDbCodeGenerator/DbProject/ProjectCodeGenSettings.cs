@@ -7,8 +7,8 @@ using System.Xml.Serialization;
 // ====================================
 // SalarDbCodeGenerator
 // http://SalarDbCodeGenerator.codeplex.com
-// Programmer: Salar Khalilzadeh <salar2k@gmail.com>
-// Copytight(c) 2012, All rights reserved
+// Salar Khalilzadeh <salar2k@gmail.com>
+// © 2012, All rights reserved
 // 2012/07/06
 // ====================================
 namespace SalarDbCodeGenerator.DbProject
