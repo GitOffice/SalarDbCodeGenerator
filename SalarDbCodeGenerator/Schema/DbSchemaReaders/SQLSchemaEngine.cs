@@ -170,6 +170,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 				foreach (DataRow row in tables.Rows)
 				{
 					string tableName = row["TABLE_NAME"].ToString();
+					string ownerName = row["TABLE_SCHEMA"].ToString();
 
 					if (!IsTableSelected(tableName))
 						continue;
@@ -189,7 +190,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 					if (jumpToNext) continue;
 
 					// View columns
-					List<DbColumn> columns = ReadColumns(tableName);
+					List<DbColumn> columns = ReadColumns(tableName, ownerName);
 
 					// read columns description
 					if (ReadColumnsDescription)
@@ -199,7 +200,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 					var dbTable = new DbTable(tableName, columns);
 
 					// table schema
-					dbTable.OwnerName = row["TABLE_SCHEMA"].ToString();
+					dbTable.OwnerName = ownerName;
 
 					// add to results
 					result.Add(dbTable);
@@ -241,12 +242,13 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 				foreach (DataRow row in views.Rows)
 				{
 					string viewName = row["TABLE_NAME"].ToString();
+					string ownerName = row["TABLE_SCHEMA"].ToString();
 
 					if (!IsViewSelected(viewName))
 						continue;
 
 					// View columns
-					List<DbColumn> columns = ReadColumns(viewName);
+					List<DbColumn> columns = ReadColumns(viewName, ownerName);
 
 					// read columns description
 					if (ReadColumnsDescription)
@@ -256,7 +258,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 					var view = new DbView(viewName, columns);
 
 					// view schema
-					view.OwnerName = row["TABLE_SCHEMA"].ToString();
+					view.OwnerName = ownerName;
 
 					// add to results
 					result.Add(view);
@@ -268,11 +270,11 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 		/// <summary>
 		/// Read columns schema from database
 		/// </summary>
-		private List<DbColumn> ReadColumns(String tableName)
+		private List<DbColumn> ReadColumns(String tableName, string ownerName)
 		{
 			List<DbColumn> result = new List<DbColumn>();
 
-			using (SqlDataAdapter adapter = new SqlDataAdapter(String.Format("SELECT TOP 1 * FROM [{0}]", tableName), (SqlConnection)_dbConnection))
+			using (SqlDataAdapter adapter = new SqlDataAdapter(String.Format("SELECT TOP 1 * FROM [{0}].[{1}]", ownerName, tableName), (SqlConnection)_dbConnection))
 			{
 				adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
 
