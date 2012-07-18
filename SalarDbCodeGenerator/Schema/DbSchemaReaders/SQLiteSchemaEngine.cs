@@ -80,7 +80,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 				case DataProviderClassNames.AssemblyReference:
 					return "System.Data.SQLite";
 				case DataProviderClassNames.StoredProcParamPrefix:
-					return "?";
+					return "@";
 				default:
 					return "";
 			}

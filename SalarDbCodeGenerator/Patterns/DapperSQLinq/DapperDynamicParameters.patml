@@ -6,7 +6,7 @@
 		Group="Engine"
 		AppliesTo="General"
 		Overwrite="false"
-		FilePath="Dapper\DapperAccessPricipal.cs"
+		FilePath="Dapper\DapperDynamicParameters.cs"
 		Language="C#"
 		/>
 	<BaseContent>
@@ -18,7 +18,7 @@ using System.Data;
 
 namespace Dapper
 {
-	public class DapperDynamicParameters :  DynamicParameters
+	public class DapperDynamicParameters : SqlMapper.IDynamicParameters
 	{
 		public IDictionary<string, object> Dictionary { get; private set; }
 		

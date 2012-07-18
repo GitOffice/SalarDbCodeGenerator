@@ -133,6 +133,7 @@
     <Compile Include="GeneratorEngine\Generator.cs" />
     <Compile Include="GeneratorEngine\ReplaceConsts.cs" />
     <Compile Include="GeneratorEngine\SchemaAnalyzer.cs" />
+    <Compile Include="Schema\Database\DbForeignKeyAction.cs" />
     <Compile Include="Schema\Database\DbTable.cs" />
     <Compile Include="Schema\Database\DbView.cs" />
     <Compile Include="Schema\Database\DbColumn.cs" />
@@ -780,7 +781,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.YearStamp.MonthAndDayStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="False" />
+      <UserProperties BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.YearStamp.MonthAndDayStamp" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

@@ -74,6 +74,10 @@ namespace SalarDbCodeGenerator.Schema.Database
 		/// </summary>
 		public string ForeignTableNameInLocalTable { get; set; }
 
+
+		public DbForeignKeyAction UpdateAction { get; set; }
+		public DbForeignKeyAction DeleteAction { get; set; }
+
 		public override string ToString()
 		{
 			return ForeignKeyName + " " + ForeignTableName;

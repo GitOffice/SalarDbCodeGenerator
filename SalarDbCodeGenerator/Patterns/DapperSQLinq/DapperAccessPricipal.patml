@@ -252,7 +252,7 @@ namespace [:Namespace:].Entities
 					<![CDATA[
 		public const string SqlTableName = "[:TableNameDb:]";
 		public const string SqlSelectCommand = "SELECT * FROM " + SqlTableName;
-		public const string SqlInsertCommand = "INSERT INTO " + SqlTableName + " [#InsertParameters#] ";
+		public const string SqlInsertCommand = "INSERT INTO " + SqlTableName + " [#InsertParametersValue#] ";
 		]]>
 				</Condition>
 				<Condition Key="WithPrimaryKey">

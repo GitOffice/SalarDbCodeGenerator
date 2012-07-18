@@ -411,14 +411,8 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 		/// </summary>
 		private void ApplyTablesForeignKeys(List<DbTable> tables, SQLServerVersions sqlServer)
 		{
-			// command format
-			string foreignKeySql = "SELECT OBJECT_NAME(f.constid) AS 'ForeignKey', OBJECT_NAME(f.fkeyid) AS 'FKTable', " +
-				" c1.name AS 'FKColumnName', OBJECT_NAME(f.rkeyid) AS 'PKTable', c2.name AS 'PKColumnName' " +
-				" FROM sysforeignkeys AS f INNER JOIN " +
-				"syscolumns AS c1 ON f.fkeyid = c1.id AND f.fkey = c1.colid INNER JOIN " +
-				"syscolumns AS c2 ON f.rkeyid = c2.id AND f.rkey = c2.colid " +
-				"ORDER BY OBJECT_NAME(f.rkeyid) ";
 			/* 
+			 * sql 2005 format
 			SELECT        CONVERT(SYSNAME, DB_NAME()) AS PKTABLE_QUALIFIER, CONVERT(SYSNAME, SCHEMA_NAME(O1.schema_id)) AS PKTABLE_OWNER, CONVERT(SYSNAME, 
 									 O1.name) AS PKTABLE_NAME, CONVERT(SYSNAME, C1.name) AS PKCOLUMN_NAME, CONVERT(SYSNAME, DB_NAME()) AS FKTABLE_QUALIFIER, 
 									 CONVERT(SYSNAME, SCHEMA_NAME(O2.schema_id)) AS FKTABLE_OWNER, CONVERT(SYSNAME, O2.name) AS FKTABLE_NAME, CONVERT(SYSNAME, C2.name) 
@@ -435,27 +429,45 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 									 sys.all_columns AS C2 ON F.parent_object_id = C2.object_id AND K.parent_column_id = C2.column_id
 			 */
 
-			//if (sqlServer > SQLServerVersions.SQL2000)
-			//{
-			//    foreignKeySql = "SELECT OBJECT_NAME(f.constid) AS 'ForeignKey', OBJECT_NAME(f.fkeyid) AS 'FKTable', " +
-			//      " c1.name AS 'FKColumnName', OBJECT_NAME(f.rkeyid) AS 'PKTable', c2.name AS 'PKColumnName' " +
-			//      " FROM sysforeignkeys AS f INNER JOIN " +
-			//      "syscolumns AS c1 ON f.fkeyid = c1.id AND f.fkey = c1.colid INNER JOIN " +
-			//      "syscolumns AS c2 ON f.rkeyid = c2.id AND f.rkey = c2.colid " +
-			//      "ORDER BY OBJECT_NAME(f.rkeyid) ";
-			//}
+			// GENERAL command format
+			string foreignKeySql = "SELECT OBJECT_NAME(f.constid) AS 'ForeignKey', OBJECT_NAME(f.fkeyid) AS 'FKTable', " +
+				" c1.name AS 'FKColumnName', OBJECT_NAME(f.rkeyid) AS 'PKTable', c2.name AS 'PKColumnName' , -1 as update_referential_action, -1 as delete_referential_action " +
+				" FROM sysforeignkeys AS f INNER JOIN " +
+				"syscolumns AS c1 ON f.fkeyid = c1.id AND f.fkey = c1.colid INNER JOIN " +
+				"syscolumns AS c2 ON f.rkeyid = c2.id AND f.rkey = c2.colid " +
+				"ORDER BY OBJECT_NAME(f.rkeyid) ";
+
+			// NEW command format
+			if (sqlServer > SQLServerVersions.SQL2000)
+			{
+				foreignKeySql =
+					@"SELECT        CONVERT(SYSNAME, DB_NAME()) AS PKTABLE_QUALIFIER, CONVERT(SYSNAME, SCHEMA_NAME(O1.schema_id)) AS PKTABLE_OWNER, CONVERT(SYSNAME, 
+						O1.name) AS 'PKTable', CONVERT(SYSNAME, C1.name) AS 'PKColumnName', CONVERT(SYSNAME, DB_NAME()) AS FKTABLE_QUALIFIER, 
+						CONVERT(SYSNAME, SCHEMA_NAME(O2.schema_id)) AS FKTABLE_OWNER, CONVERT(SYSNAME, O2.name) AS 'FKTable', CONVERT(SYSNAME, C2.name) 
+						AS 'FKColumnName', CONVERT(SMALLINT, CASE OBJECTPROPERTY(F.OBJECT_ID, 'CnstIsUpdateCascade') WHEN 1 THEN 0 ELSE 1 END) AS UPDATE_RULE, 
+						CONVERT(SMALLINT, CASE OBJECTPROPERTY(F.OBJECT_ID, 'CnstIsDeleteCascade') WHEN 1 THEN 0 ELSE 1 END) AS DELETE_RULE, CONVERT(SYSNAME, 
+						OBJECT_NAME(F.object_id)) AS 'ForeignKey', CONVERT(SYSNAME, I.name) AS PK_NAME, CONVERT(SMALLINT, 7) AS DEFERRABILITY, F.delete_referential_action, 
+						F.update_referential_action
+					FROM            sys.all_objects AS O1 INNER JOIN
+						sys.foreign_keys AS F INNER JOIN
+						sys.foreign_key_columns AS K ON K.constraint_object_id = F.object_id INNER JOIN
+						sys.indexes AS I ON F.referenced_object_id = I.object_id AND F.key_index_id = I.index_id ON O1.object_id = F.referenced_object_id INNER JOIN
+						sys.all_objects AS O2 ON F.parent_object_id = O2.object_id INNER JOIN
+						sys.all_columns AS C1 ON F.referenced_object_id = C1.object_id AND K.referenced_column_id = C1.column_id INNER JOIN
+						sys.all_columns AS C2 ON F.parent_object_id = C2.object_id AND K.parent_column_id = C2.column_id";
+			}
 
 			try
 			{
-				using (SqlDataAdapter adapter = new SqlDataAdapter(foreignKeySql, (SqlConnection)_dbConnection))
+				using (var adapter = new SqlDataAdapter(foreignKeySql, (SqlConnection)_dbConnection))
 				{
 					adapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
 
 					// description data table
-					using (DataTable keysData = new DataTable())
+					using (var keysData = new DataTable())
 					{
 						// Just to avoid stupid "Failed to enable constraints" error!
-						using (DataSet tempDs = new DataSet())
+						using (var tempDs = new DataSet())
 						{
 							// Avoiding stupid "Failed to enable constraints" error!
 							tempDs.EnforceConstraints = false;
@@ -488,19 +500,17 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 																			ForeignTableName = keysDataRow["FKTable"].ToString(),
 																			Multiplicity = DbForeignKey.ForeignKeyMultiplicity.ManyToOne
 																		};
+									manyMultiplicityKey_Local.UpdateAction =
+										ConvertSqlServerForeignKeyAction(Convert.ToInt32(keysDataRow["update_referential_action"].ToString()));
+									manyMultiplicityKey_Local.DeleteAction =
+										ConvertSqlServerForeignKeyAction(Convert.ToInt32(keysDataRow["delete_referential_action"].ToString()));
 
 									// check if it is already there
 									if (primaryKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == manyMultiplicityKey_Local.ForeignKeyName))
 										continue;
-									//if (primaryKeyTable.ForeignKeys.Exists(x =>
-									//    x.ForeignColumnName == manyMultiplicityKey_Local.ForeignColumnName &&
-									//    x.LocalColumnName == manyMultiplicityKey_Local.LocalColumnName))
-									//    continue;
 
 									// to the list
 									primaryKeyTable.ForeignKeys.Add(manyMultiplicityKey_Local);
-
-
 
 									// apply local column
 									DbColumn localColumn = primaryKeyTable.FindColumnDb(manyMultiplicityKey_Local.LocalColumnName);
@@ -539,14 +549,14 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 																			ForeignTableName = keysDataRow["PKTable"].ToString(),
 																			Multiplicity = DbForeignKey.ForeignKeyMultiplicity.OneToMany
 																		};
+									oneMultiplicityKey_Foreign.UpdateAction =
+										ConvertSqlServerForeignKeyAction(Convert.ToInt32(keysDataRow["update_referential_action"].ToString()));
+									oneMultiplicityKey_Foreign.DeleteAction =
+										ConvertSqlServerForeignKeyAction(Convert.ToInt32(keysDataRow["delete_referential_action"].ToString()));
 
 									// check if it is already there
 									if (foreignKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == oneMultiplicityKey_Foreign.ForeignKeyName))
 										continue;
-									//if (foreignKeyTable.ForeignKeys.Exists(x =>
-									//    x.ForeignColumnName == oneMultiplicityKey_Foreign.ForeignColumnName &&
-									//    x.LocalColumnName == oneMultiplicityKey_Foreign.LocalColumnName))
-									//    continue;
 
 									// to the list
 									foreignKeyTable.ForeignKeys.Add(oneMultiplicityKey_Foreign);
@@ -928,6 +938,25 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 			}
 			else
 				return SQLServerVersions.SQL2000Below;
+		}
+
+
+		private DbForeignKeyAction ConvertSqlServerForeignKeyAction(int actionCode)
+		{
+			switch (actionCode)
+			{
+				case 0:
+					return DbForeignKeyAction.NoAction;
+				case 1:
+					return DbForeignKeyAction.Cascade;
+				case 2:
+					return DbForeignKeyAction.SetNull;
+				case 3:
+					return DbForeignKeyAction.SetDefault;
+				//case 4:
+				//    return DbForeignKeyAction.Restrict;
+			}
+			return DbForeignKeyAction.NotSet;
 		}
 		#endregion
 	}
