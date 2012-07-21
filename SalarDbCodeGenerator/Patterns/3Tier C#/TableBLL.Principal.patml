@@ -49,7 +49,7 @@ namespace [:Namespace:].BLL
 		</Condition>
 		
 		<ConditionContents>
-			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldForeignKey">
+			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldsForeignKeyAll">
 				<Condition Key="MultiplicityOne">
 					<![CDATA[
 		public List<[:LocalTableName:]Model> GetBy[:LocalFieldName:]([:LocalFieldDotNetType:] [:LocalFieldName:])

@@ -81,7 +81,7 @@ End Namespace
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="FieldsVariables" ConditionKeyMode="FieldKeyType" description="Table Fields Variables">
+			<PatternContent Name="FieldsVariables" ConditionKeyMode="FieldsKeyTypeAll" description="Table Fields Variables">
 				<Condition Key="AutoInrcementPrimaryKey">
 					<![CDATA[
 		Private _[:FieldName:] As [:FieldDotNetType:]]]>
@@ -116,7 +116,7 @@ End Namespace
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldKeyType" description="Table fields properties">
+			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldsKeyTypeAll" description="Table fields properties">
 				<Condition Key="AutoInrcementPrimaryKey">
 					<![CDATA[
 		''' <summary>
@@ -231,7 +231,7 @@ End Namespace
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="ReadFieldsFromDataReader" ConditionKeyMode="FieldKeyReadType" description="Reading fields from database">
+			<PatternContent Name="ReadFieldsFromDataReader" ConditionKeyMode="FieldsKeyReadTypeAll" description="Reading fields from database">
 				<Condition Key="NormalField_Convert">
 					<![CDATA[
 			_[:FieldName:] = Convert.To[:FieldDotNetType:](dataReader("[:FieldNameDb:]"))]]>
@@ -260,7 +260,7 @@ End Namespace
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="ReadFieldsFromOrdinalCache" ConditionKeyMode="FieldKeyReadType">
+			<PatternContent Name="ReadFieldsFromOrdinalCache" ConditionKeyMode="FieldsKeyReadTypeAll">
 				<Condition Key="NormalField_Convert">
 					<![CDATA[
 			_[:FieldName:] = Convert.To[:FieldDotNetType:](dataReader(fields.[:FieldName:]))]]>
@@ -289,7 +289,7 @@ End Namespace
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="ReadFieldsOrdinalFromDataReader" ConditionKeyMode="FieldKeyReadType" description="Reading fields from database">
+			<PatternContent Name="ReadFieldsOrdinalFromDataReader" ConditionKeyMode="FieldsKeyReadTypeAll" description="Reading fields from database">
 				<Condition Key="NormalField_Convert">
 					<![CDATA[
 			_[:FieldName:] = Convert.To[:FieldDotNetType:](dataReader([:FieldOrdinalValue:]))]]>

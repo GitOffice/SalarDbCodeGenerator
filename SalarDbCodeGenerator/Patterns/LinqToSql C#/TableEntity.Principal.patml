@@ -44,7 +44,7 @@ namespace [:Namespace:].Entities
 ]]>
 		</Condition>
 		<ConditionContents>
-			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldForeignKey">
+			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldsForeignKeyAll">
 				<Condition Key="MultiplicityOne">
 					<![CDATA[
 		private EntityRef<[:ForeignTableName:]Entity> _[:LocalFieldName:]_[:ForeignTableName:]_[:ForeignFieldName:]Ref;
@@ -81,7 +81,7 @@ namespace [:Namespace:].Entities
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldKeyType">
+			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldsKeyTypeAll">
 				<Condition Key="AutoInrcementPrimaryKey">
 					<![CDATA[
 		/// <summary>

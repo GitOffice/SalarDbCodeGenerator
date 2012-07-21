@@ -66,7 +66,7 @@ namespace [:Namespace:].Entities
 ]]>
 		</Condition>
 		<ConditionContents>
-			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldForeignKey">
+			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldsForeignKeyAll">
 				<Condition Key="MultiplicityOne">
 					<![CDATA[
 		public List<[:LocalTableName:]> GetBy[:LocalFieldName:]([:LocalFieldDotNetType:] [:LocalFieldName:])
@@ -190,7 +190,7 @@ namespace [:Namespace:].Entities
 		]]>
 				</Condition>
 				<ConditionContents>
-					<PatternContent Name="InsertParametersName" ConditionKeyMode="FieldKeyType">
+					<PatternContent Name="InsertParametersName" ConditionKeyMode="FieldsKeyTypeAll">
 						<ItemsSeperator>
 							<![CDATA[ , ]]>
 						</ItemsSeperator>
@@ -204,7 +204,7 @@ namespace [:Namespace:].Entities
 						<Condition Key="NullableType"><![CDATA[[:FieldNameDb:]]]></Condition>
 					</PatternContent>
 
-					<PatternContent Name="InsertParametersValue" ConditionKeyMode="FieldKeyType">
+					<PatternContent Name="InsertParametersValue" ConditionKeyMode="FieldsKeyTypeAll">
 						<ItemsSeperator>
 							<![CDATA[ , ]]>
 						</ItemsSeperator>
@@ -218,7 +218,7 @@ namespace [:Namespace:].Entities
 						<Condition Key="NullableType"><![CDATA[[:ProviderSPParamPrefix:][:FieldName:]]]></Condition>
 					</PatternContent>
 
-					<PatternContent Name="UpdateParameters" ConditionKeyMode="FieldKeyType">
+					<PatternContent Name="UpdateParameters" ConditionKeyMode="FieldsKeyTypeAll">
 						<ItemsSeperator>
 							<![CDATA[ , ]]>
 						</ItemsSeperator>
@@ -232,7 +232,7 @@ namespace [:Namespace:].Entities
 						<Condition Key="NullableType"><![CDATA[[:FieldNameDb:]=[:ProviderSPParamPrefix:][:FieldName:]]]></Condition>
 					</PatternContent>
 
-					<PatternContent Name="PrimaryKeyParameters" ConditionKeyMode="FieldKeyType">
+					<PatternContent Name="PrimaryKeyParameters" ConditionKeyMode="FieldsKeyTypeAll">
 						<ItemsSeperator>
 							<![CDATA[ AND ]]>
 						</ItemsSeperator>

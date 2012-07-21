@@ -37,7 +37,7 @@ namespace [:Namespace:].Entities
 ]]>
 		</Condition>
 		<ConditionContents>
-			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldForeignKey">
+			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldsForeignKeyAll">
 				<Condition Key="MultiplicityOne">
 					<![CDATA[
 		/// <summary>
@@ -64,7 +64,7 @@ namespace [:Namespace:].Entities
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldKeyType">
+			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldsKeyTypeAll">
 				<Condition Key="AutoInrcementPrimaryKey">
 					<![CDATA[
 		/// <summary>

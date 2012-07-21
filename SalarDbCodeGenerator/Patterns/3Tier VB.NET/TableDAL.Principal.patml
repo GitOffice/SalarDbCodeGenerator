@@ -220,7 +220,7 @@ End Namespace
 						</Condition>
 					</PatternContent>
 
-					<PatternContent Name="InsertParameters" ConditionKeyMode="FieldKeyType" description="Model parameters to send to the insert or update commands">
+					<PatternContent Name="InsertParameters" ConditionKeyMode="FieldsKeyTypeAll" description="Model parameters to send to the insert or update commands">
 						<Condition Key="AutoInrcementPrimaryKey"></Condition>
 						<Condition Key="AutoInrcement"></Condition>
 						<Condition Key="AutoIncNativeNullable"></Condition>
@@ -273,7 +273,7 @@ End Namespace
 						</Condition>
 					</PatternContent>
 
-					<PatternContent Name="UpdateParameters" ConditionKeyMode="FieldKeyType" description="Model parameters to send to the insert or update commands">
+					<PatternContent Name="UpdateParameters" ConditionKeyMode="FieldsKeyTypeAll" description="Model parameters to send to the insert or update commands">
 						<Condition Key="AutoInrcementPrimaryKey">
 							<![CDATA[
 				cmd.Parameters.AddWithValue("@[:FieldNameDb:]", model.[:FieldName:])]]>

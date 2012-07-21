@@ -66,22 +66,25 @@ namespace SalarDbCodeGenerator.Schema.Patterns
 		/// TheReplacement
 		/// </summary>
 		FieldsAll,
+		Field,
 
 		/// <summary>
 		/// NormalField, PrimaryKey
 		/// </summary>
+		FieldsPrimaryKeyAll,
 		FieldPrimaryKey,
 
 		/// <summary>
 		/// MultiplicityOne, MultiplicityMany
 		/// </summary>
+		FieldsForeignKeyAll,
 		FieldForeignKey,
 
 		/// <summary>
 		/// NotSet, NoAction, Cascade, SetNull, SetDefault, Restrict
 		/// </summary>
 		ForeignKeyUpdateAction,
-		
+
 		/// <summary>
 		/// NotSet, NoAction, Cascade, SetNull, SetDefault, Restrict
 		/// </summary>
@@ -90,17 +93,21 @@ namespace SalarDbCodeGenerator.Schema.Patterns
 		/// <summary>
 		/// AutoInrcementPrimaryKey ,AutoInrcement, PrimaryKey, AutoIncNativeNullable, AutoIncNullableType, NormalField, NativeNullable, NullableType
 		/// </summary>
+		FieldsKeyTypeAll,
+		FieldsReferencedKeyTypeAll,
 		FieldKeyType,
 		FieldReferencedKeyType,
 
 		/// <summary>
 		/// NormalField_Convert, NormalField_Cast, Nullable_Convert, Nullable_Cast
 		/// </summary>
+		FieldsKeyReadTypeAll,
 		FieldKeyReadType,
 
- 		/// <summary>
+		/// <summary>
 		/// None, String, Integer, Decimal
 		/// </summary>
+		FieldsCondensedTypeAll,
 		FieldCondensedType,
 
 		/// <summary>

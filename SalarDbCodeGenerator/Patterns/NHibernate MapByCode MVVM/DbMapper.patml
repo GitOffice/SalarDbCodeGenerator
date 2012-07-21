@@ -49,7 +49,7 @@ namespace [:Namespace:].Entities
 ]]>
 		</Condition>
 		<ConditionContents>
-			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldForeignKey">
+			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldsForeignKeyAll">
 				<Condition Key="MultiplicityOne">
 					<![CDATA[
 					mp.ManyToOne<[:ForeignTableName:]>(
@@ -99,7 +99,7 @@ namespace [:Namespace:].Entities
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldKeyType">
+			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldsKeyTypeAll">
 				<Condition Key="AutoInrcementPrimaryKey">
 					<![CDATA[
 					mp.Id(

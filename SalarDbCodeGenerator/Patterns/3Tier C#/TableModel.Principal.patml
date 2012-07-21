@@ -105,7 +105,7 @@ namespace [:Namespace:].Model
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="FieldsVariables" ConditionKeyMode="FieldKeyType">
+			<PatternContent Name="FieldsVariables" ConditionKeyMode="FieldsKeyTypeAll">
 				<Condition Key="AutoInrcementPrimaryKey">
 					<![CDATA[
 		private [:FieldDotNetType:] _[:FieldName:];]]>
@@ -140,7 +140,7 @@ namespace [:Namespace:].Model
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldKeyType">
+			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldsKeyTypeAll">
 				<Condition Key="AutoInrcementPrimaryKey">
 					<![CDATA[
 		/// <summary>
@@ -310,7 +310,7 @@ namespace [:Namespace:].Model
 				</ConditionContents>
 			</PatternContent>
 
-			<PatternContent Name="ReadFieldsFromOrdinalCache" ConditionKeyMode="FieldKeyReadType">
+			<PatternContent Name="ReadFieldsFromOrdinalCache" ConditionKeyMode="FieldsKeyReadTypeAll">
 				<Condition Key="NormalField_Convert">
 					<![CDATA[
 			_[:FieldName:] = Convert.To[:FieldDotNetType:](dataReader[fields.[:FieldName:]]);]]>
@@ -337,7 +337,7 @@ namespace [:Namespace:].Model
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="ReadFieldsFromDataReader" ConditionKeyMode="FieldKeyReadType">
+			<PatternContent Name="ReadFieldsFromDataReader" ConditionKeyMode="FieldsKeyReadTypeAll">
 				<Condition Key="NormalField_Convert">
 					<![CDATA[
 			_[:FieldName:] = Convert.To[:FieldDotNetType:](dataReader["[:FieldNameDb:]"]);]]>
@@ -364,7 +364,7 @@ namespace [:Namespace:].Model
 				</Condition>
 			</PatternContent>
 
-			<PatternContent Name="ReadFieldsOrdinalFromDataReader" ConditionKeyMode="FieldKeyReadType">
+			<PatternContent Name="ReadFieldsOrdinalFromDataReader" ConditionKeyMode="FieldsKeyReadTypeAll">
 				<Condition Key="NormalField_Convert">
 					<![CDATA[
 			_[:FieldName:] = Convert.To[:FieldDotNetType:](dataReader[[:FieldOrdinalValue:]]);]]>

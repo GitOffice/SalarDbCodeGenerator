@@ -86,7 +86,7 @@ namespace [:Namespace:].DAL
 ]]>
 		</Condition>
 		<ConditionContents>
-			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldForeignKey">
+			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldsForeignKeyAll">
 				<Condition Key="MultiplicityMany"></Condition>
 				<Condition Key="MultiplicityOne">
 					<![CDATA[
@@ -407,7 +407,7 @@ namespace [:Namespace:].DAL
 				</Condition>
 
 				<ConditionContents>
-					<PatternContent Name="InsertParameters" ConditionKeyMode="FieldKeyType">
+					<PatternContent Name="InsertParameters" ConditionKeyMode="FieldsKeyTypeAll">
 						<Condition Key="AutoInrcementPrimaryKey"></Condition>
 						<Condition Key="AutoInrcement"></Condition>
 						<Condition Key="AutoIncNativeNullable"></Condition>
@@ -434,7 +434,7 @@ namespace [:Namespace:].DAL
 						</Condition>
 					</PatternContent>
 
-					<PatternContent Name="UpdateParameters" ConditionKeyMode="FieldKeyType">
+					<PatternContent Name="UpdateParameters" ConditionKeyMode="FieldsKeyTypeAll">
 						<Condition Key="AutoInrcementPrimaryKey">
 							<![CDATA[
 					cmd.Parameters.AddWithValue("@[:FieldNameDb:]", model.[:FieldName:]);]]>

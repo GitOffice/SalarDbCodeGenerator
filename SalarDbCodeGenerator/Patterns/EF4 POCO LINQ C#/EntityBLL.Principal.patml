@@ -53,7 +53,7 @@ namespace [:Namespace:].BLL
 		</Condition>
 
 		<ConditionContents>
-			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldForeignKey">
+			<PatternContent Name="ForeignKeys" ConditionKeyMode="FieldsForeignKeyAll">
 				<Condition Key="MultiplicityMany"></Condition>
 				<Condition Key="MultiplicityOne">
 					<![CDATA[

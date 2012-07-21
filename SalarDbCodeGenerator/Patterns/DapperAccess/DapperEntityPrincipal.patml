@@ -32,7 +32,7 @@ namespace [:Namespace:].Entities
 ]]>
 		</Condition>
 		<ConditionContents>
-			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldKeyType">
+			<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldsKeyTypeAll">
 				<Condition Key="AutoInrcementPrimaryKey">
 					<![CDATA[
 		/// <summary>

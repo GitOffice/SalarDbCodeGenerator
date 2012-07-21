@@ -33,7 +33,7 @@ namespace [:Namespace:].DataAnnotations
 ]]>
 	</BaseContent>
 
-	<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldKeyType">
+	<PatternContent Name="FieldsProperties" ConditionKeyMode="FieldsKeyTypeAll">
 		<Condition Key="AutoInrcementPrimaryKey">
 			<![CDATA[
 		[DisplayName("[:FieldDescription:]")]

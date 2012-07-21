@@ -195,8 +195,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 				genContent = PatternContentAppliesTo_TablesAndViews(genContent,
 					patternFile.PatternContents,
 					tablesList,
-					viewsList,
-					patternFile);
+					viewsList);
 
 				// all is done! Write to file
 				File.WriteAllText(fileName, genContent);
@@ -262,12 +261,12 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 										  table.TableName);
 
 					// for each pattern content
-					genContent = PatternContentAppliesTo_OneTable(genContent,
+					genContent = PatternContentAppliesTo_OneTable(
+						genContent,
 						patternFile.PatternContents,
-						tablesList,
-						viewsList,
 						table,
-						patternFile);
+						null,
+						null);
 
 					// all is done! Write to file
 					File.WriteAllText(fileName, genContent);
@@ -316,8 +315,8 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 				if (genContent.IndexOf(partialName) == -1)
 					continue;
 
-				 if (pattern.ConditionKeyMode == PatternConditionKeyMode.General ||
-					pattern.ConditionKeyMode == PatternConditionKeyMode.DatabaseProvider)
+				if (pattern.ConditionKeyMode == PatternConditionKeyMode.General ||
+				   pattern.ConditionKeyMode == PatternConditionKeyMode.DatabaseProvider)
 				{
 					string contentToReplace = PatternContentAppliesTo_General(pattern);
 
@@ -463,13 +462,14 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 			return "";
 		}
 
-
+		/// <summary>
+		/// One table, one column or one foreignKey in table!
+		/// </summary>
 		string PatternContentAppliesTo_OneTable(string baseContent,
 			List<PatternContent> patternContent,
-			DbTable[] tablesList,
-			DbTable[] viewsList,
 			DbTable table,
-			PatternFile patternFile)
+			DbColumn column,
+			DbForeignKey foreignKey)
 		{
 			string appliedContent = "";
 
@@ -518,19 +518,76 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 						if (pattern.ConditionContents.Count > 0)
 						{
 							// nested call
-							appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, tablesList, viewsList, table, patternFile);
+							appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, table, null, null);
 						}
 
 						// replace the content
 						baseContent = baseContent.Replace(replacementName, appliedContent);
 						break;
 
-					case PatternConditionKeyMode.FieldsAll:
+
+					case PatternConditionKeyMode.Field:
 					case PatternConditionKeyMode.FieldCondensedType:
 					case PatternConditionKeyMode.FieldKeyReadType:
 					case PatternConditionKeyMode.FieldKeyType:
 					case PatternConditionKeyMode.FieldPrimaryKey:
 					case PatternConditionKeyMode.FieldReferencedKeyType:
+						appliedContent = "";
+
+						// no special column is specified
+						if (column == null)
+						{
+							// replace in the main content
+							baseContent = Common.ReplaceEx(baseContent, replacementName, appliedContent, StringComparison.CurrentCulture);
+						}
+						else
+						{
+							// Apply the replacement to the pattern content
+							string columnReplace = ConditionItem_AppliesToColumn(pattern, table, column);
+
+							// The seperator
+							if (!string.IsNullOrEmpty(columnReplace))
+							{
+								// internal pattern contents
+								// FOR EACH column
+								if (pattern.ConditionContents.Count > 0)
+								{
+									// nested call
+									columnReplace = PatternContentAppliesTo_OneTable(
+										columnReplace,
+										pattern.ConditionContents,
+										table,
+										column,
+										null);
+								}
+								appliedContent += columnReplace + pattern.ItemsSeperator;
+							}
+						}
+
+
+						// Remove additional ItemsSeperator
+						if (!string.IsNullOrEmpty(pattern.ItemsSeperator)
+							&& appliedContent.EndsWith(pattern.ItemsSeperator))
+							appliedContent = appliedContent.Remove(appliedContent.Length - pattern.ItemsSeperator.Length, pattern.ItemsSeperator.Length);
+
+						// internal pattern contents
+						// FOR EACH column
+						if (pattern.ConditionContents.Count > 0)
+						{
+							// nested call
+							appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, table, null, null);
+						}
+
+						// replace in the main content
+						baseContent = Common.ReplaceEx(baseContent, replacementName, appliedContent, StringComparison.CurrentCulture);
+						break;
+
+					case PatternConditionKeyMode.FieldsAll:
+					case PatternConditionKeyMode.FieldsCondensedTypeAll:
+					case PatternConditionKeyMode.FieldsKeyReadTypeAll:
+					case PatternConditionKeyMode.FieldsKeyTypeAll:
+					case PatternConditionKeyMode.FieldsPrimaryKeyAll:
+					case PatternConditionKeyMode.FieldsReferencedKeyTypeAll:
 						appliedContent = "";
 
 						// fetch the columns and apply the replacement operation
@@ -541,9 +598,21 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 
 							// The seperator
 							if (!string.IsNullOrEmpty(columnReplace))
+							{
+								// internal pattern contents
+								// FOR EACH column
+								if (pattern.ConditionContents.Count > 0)
+								{
+									// nested call
+									columnReplace = PatternContentAppliesTo_OneTable(
+										columnReplace,
+										pattern.ConditionContents,
+										table,
+										tableColumn, null);
+								}
 								appliedContent += columnReplace + pattern.ItemsSeperator;
+							}
 						}
-
 
 						// Remove additional ItemsSeperator
 						if (!string.IsNullOrEmpty(pattern.ItemsSeperator)
@@ -551,31 +620,50 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 							appliedContent = appliedContent.Remove(appliedContent.Length - pattern.ItemsSeperator.Length, pattern.ItemsSeperator.Length);
 
 						// internal pattern contents
+						// FOR EACH column
 						if (pattern.ConditionContents.Count > 0)
 						{
 							// nested call
-							appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, tablesList, viewsList, table, patternFile);
+							appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, table, null, null);
 						}
 
 						// replace in the main content
 						baseContent = Common.ReplaceEx(baseContent, replacementName, appliedContent, StringComparison.CurrentCulture);
 						break;
 
+					case PatternConditionKeyMode.ForeignKeyDeleteAction:
+					case PatternConditionKeyMode.ForeignKeyUpdateAction:
 					case PatternConditionKeyMode.FieldForeignKey:
-					case PatternConditionKeyMode.TableForeignKey:
 						appliedContent = "";
 
-						// fetch the columns and apply the replacement operation
-						foreach (var foreignKey in table.ForeignKeys)
+						if (foreignKey == null)
+						{
+							// replace in the main content
+							baseContent = Common.ReplaceEx(baseContent, replacementName, appliedContent, StringComparison.CurrentCulture);
+						}
+						else
 						{
 							// Apply the replacement to the pattern content
 							string columnReplace = ConditionItem_AppliesToForeignKeyColumns(pattern, table, foreignKey);
 
 							// The seperator
 							if (!string.IsNullOrEmpty(columnReplace))
-								appliedContent += columnReplace + pattern.ItemsSeperator;
-						}
+							{
+								// internal pattern contents
+								if (pattern.ConditionContents.Count > 0)
+								{
+									// nested call
+									columnReplace = PatternContentAppliesTo_OneTable(
+										columnReplace,
+										pattern.ConditionContents,
+										table,
+										null,
+										foreignKey);
+								}
 
+								appliedContent += columnReplace + pattern.ItemsSeperator;
+							}
+						}
 
 						// Remove additional ItemsSeperator
 						if (!string.IsNullOrEmpty(pattern.ItemsSeperator)
@@ -586,7 +674,53 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 						if (pattern.ConditionContents.Count > 0)
 						{
 							// nested call
-							appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, tablesList, viewsList, table, patternFile);
+							appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, table, null, null);
+						}
+
+						// replace in the main content
+						baseContent = Common.ReplaceEx(baseContent, replacementName, appliedContent, StringComparison.CurrentCulture);
+						break;
+
+					case PatternConditionKeyMode.FieldsForeignKeyAll:
+					case PatternConditionKeyMode.TableForeignKey:
+						appliedContent = "";
+
+
+						// fetch the columns and apply the replacement operation
+						foreach (var dbForeignKey in table.ForeignKeys)
+						{
+							// Apply the replacement to the pattern content
+							string columnReplace = ConditionItem_AppliesToForeignKeyColumns(pattern, table, dbForeignKey);
+
+							// The seperator
+							if (!string.IsNullOrEmpty(columnReplace))
+							{
+								// internal pattern contents
+								if (pattern.ConditionContents.Count > 0)
+								{
+									// nested call
+									columnReplace = PatternContentAppliesTo_OneTable(
+										columnReplace,
+										pattern.ConditionContents,
+										table,
+										null,
+										dbForeignKey);
+								}
+
+								appliedContent += columnReplace + pattern.ItemsSeperator;
+							}
+						}
+
+						// Remove additional ItemsSeperator
+						if (!string.IsNullOrEmpty(pattern.ItemsSeperator)
+							&& appliedContent.EndsWith(pattern.ItemsSeperator))
+							appliedContent = appliedContent.Remove(appliedContent.Length - pattern.ItemsSeperator.Length, pattern.ItemsSeperator.Length);
+
+						// internal pattern contents
+						if (pattern.ConditionContents.Count > 0)
+						{
+							// nested call
+							appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, table, null, null);
 						}
 
 						// replace in the main content
@@ -606,8 +740,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 			string baseContent,
 			List<PatternContent> patternContent,
 			DbTable[] tablesList,
-			DbTable[] viewsList,
-			PatternFile patternFile)
+			DbTable[] viewsList)
 		{
 			string appliedContent = "";
 
@@ -686,8 +819,11 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 							if (pattern.ConditionContents.Count > 0)
 							{
 								// nested call
-								appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, tablesList, viewsList,
-																				  tbl, patternFile);
+								appliedContent = PatternContentAppliesTo_OneTable(
+									appliedContent,
+									pattern.ConditionContents,
+									tbl,
+									null, null);
 							}
 						}
 
@@ -717,8 +853,11 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 							if (pattern.ConditionContents.Count > 0)
 							{
 								// nested call
-								appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, tablesList, viewsList,
-																				  view, patternFile);
+								appliedContent = PatternContentAppliesTo_OneTable(
+									appliedContent,
+									pattern.ConditionContents,
+									view,
+									null, null);
 							}
 						}
 
@@ -754,8 +893,10 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 							if (pattern.ConditionContents.Count > 0)
 							{
 								// nested call
-								appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, tablesList, viewsList,
-																				  tbl, patternFile);
+								appliedContent = PatternContentAppliesTo_OneTable(
+									appliedContent, pattern.ConditionContents,
+									tbl,
+									null, null);
 							}
 						}
 
@@ -793,8 +934,10 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 							if (pattern.ConditionContents.Count > 0)
 							{
 								// nested call
-								appliedContent = PatternContentAppliesTo_OneTable(appliedContent, pattern.ConditionContents, tablesList, viewsList,
-																				  view, patternFile);
+								appliedContent = PatternContentAppliesTo_OneTable(
+									appliedContent, pattern.ConditionContents,
+									view,
+									null, null);
 							}
 						}
 
@@ -1279,11 +1422,13 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 				//    return Replacer_ConditionItem_AppliesToColumn(dbReplacer.Content, table, column);		
 
 				case PatternConditionKeyMode.FieldsAll:
+				case PatternConditionKeyMode.Field:
 					var replacer = partialContent.GetFirst();
 
 					// Replace the contents
 					return Replacer_ConditionItem_AppliesToColumn(replacer.ContentText, table, column);
 
+				case PatternConditionKeyMode.FieldsCondensedTypeAll:
 				case PatternConditionKeyMode.FieldCondensedType:
 					ConditionItem replacerCondensedType = null;
 
@@ -1311,6 +1456,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 						return Replacer_ConditionItem_AppliesToColumn(replacerCondensedType.ContentText, table, column);
 					return string.Empty;
 
+				case PatternConditionKeyMode.FieldsPrimaryKeyAll:
 				case PatternConditionKeyMode.FieldPrimaryKey:
 					ConditionItem primaryReplacer;
 
@@ -1326,14 +1472,16 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 
 				case PatternConditionKeyMode.FieldReferencedKeyType:
 				case PatternConditionKeyMode.FieldKeyType:
+				case PatternConditionKeyMode.FieldsReferencedKeyTypeAll:
+				case PatternConditionKeyMode.FieldsKeyTypeAll:
 					ConditionItem keyTypeReplacer;
 
 					// this key is not reference type
 					if (_patternProject.SeperateReferenceColumns)
 					{
-						if (column.IsReferenceKey && partialContent.ConditionKeyMode == PatternConditionKeyMode.FieldKeyType)
+						if (column.IsReferenceKey && partialContent.ConditionKeyMode == PatternConditionKeyMode.FieldsKeyTypeAll)
 							return "";
-						if (!column.IsReferenceKey && partialContent.ConditionKeyMode == PatternConditionKeyMode.FieldReferencedKeyType)
+						if (!column.IsReferenceKey && partialContent.ConditionKeyMode == PatternConditionKeyMode.FieldsReferencedKeyTypeAll)
 							return "";
 					}
 
@@ -1380,6 +1528,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 					return Replacer_ConditionItem_AppliesToColumn(keyTypeReplacer.ContentText, table, column);
 
 
+				case PatternConditionKeyMode.FieldsKeyReadTypeAll:
 				case PatternConditionKeyMode.FieldKeyReadType:
 					ConditionItem keyRead;
 
@@ -1419,7 +1568,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 		{
 			switch (partialContent.ConditionKeyMode)
 			{
-				case PatternConditionKeyMode.FieldForeignKey:
+				case PatternConditionKeyMode.FieldsForeignKeyAll:
 					ConditionItem theReplacer;
 
 					switch (foreignKey.Multiplicity)
@@ -1438,6 +1587,18 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 					}
 
 					// Replace the contents
+					return Replacer_ConditionItem_AppliesToForeignKey(theReplacer.ContentText, table, foreignKey);
+
+				case PatternConditionKeyMode.ForeignKeyUpdateAction:
+					theReplacer = partialContent.GetReplacement(foreignKey.UpdateAction.ToString());
+					if (theReplacer == null)
+						return string.Empty;
+					return Replacer_ConditionItem_AppliesToForeignKey(theReplacer.ContentText, table, foreignKey);
+
+				case PatternConditionKeyMode.ForeignKeyDeleteAction:
+					theReplacer = partialContent.GetReplacement(foreignKey.DeleteAction.ToString());
+					if (theReplacer == null)
+						return string.Empty;
 					return Replacer_ConditionItem_AppliesToForeignKey(theReplacer.ContentText, table, foreignKey);
 
 				default:
