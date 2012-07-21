@@ -300,7 +300,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 						}
 
 						newName = renamedName;
-						// name is chaned and no longer check is required
+						// name is chaned and check is no longer required
 						break;
 					}
 				}
@@ -330,7 +330,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 			int initReplacePartCount = 0;
 			string initReplacePartStr = "";
 
-			// column name should not be same
+			// column name should not be the same
 			if (newName.Equals(table.TableNameSchema, stringCompare) ||
 				newName.Equals(table.TableNameSchemaCS, stringCompare))
 			{
@@ -342,7 +342,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 				while (table.FindColumnSchema(renamedName) != null ||
 					table.ForeignKeys.Any(x => x.ForeignTableNameInLocalTable.Equals(renamedName, stringCompare)))
 				{
-					newName = string.Format(replacement, newName, initReplacePartStr);
+					renamedName = string.Format(replacement, newName, initReplacePartStr);
 					initReplacePartCount++;
 					initReplacePartStr = initReplacePartCount.ToString();
 				}
@@ -355,7 +355,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 				var sameNameForeignKeys =
 					table.ForeignKeys.Where(x => x.ForeignTableNameInLocalTable.Equals(newName, stringCompare)).ToList();
 
-				// no more than one accurance, including itself
+				// no more than one occurrence, including itself
 				if (table.FindColumnSchema(newName) != null ||
 					(sameNameForeignKeys.Count > 1 && sameNameForeignKeys.IndexOf(foreignKey) > 0))
 				{
@@ -395,7 +395,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 				}
 			}
 
-			// checking keyword match if only not changed foreign name
+			// checking keyword match if only foreign name is not changed
 			if (newName.Equals(foreignKey.ForeignTableNameInLocalTable, stringCompare))
 			{
 				// ignoring keywords
@@ -418,7 +418,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 						}
 
 						newName = renamedName;
-						// name is chaned and no longer check is required
+						// name is chaned and check is no longer required
 						break;
 					}
 				}

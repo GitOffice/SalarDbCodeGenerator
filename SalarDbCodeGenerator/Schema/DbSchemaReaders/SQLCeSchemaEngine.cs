@@ -80,7 +80,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 		public override void FillSchema(DbDatabase schemaDatabase)
 		{
 			if (schemaDatabase == null)
-				throw new ArgumentNullException("schemaDatabase", "Database is not specifed.");
+				throw new ArgumentNullException("schemaDatabase", "Database is not specified.");
 
 			try
 			{
@@ -138,7 +138,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 
 		#region private methods
 		/// <summary>
-		/// Reads tables list. This method requires views list to prevent from conflict!
+		/// Reads tables list. This method requires views list to prevent confliction!
 		/// </summary>
 		private StringCollection ReadTablesList(StringCollection viewsList)
 		{
@@ -154,7 +154,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 					{
 						string tableName = row["TABLE_NAME"].ToString();
 
-						// search in views about this
+						// is this view?
 						if (viewsList.Contains(tableName))
 							continue;
 
@@ -236,12 +236,12 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 						{
 							if (view.TableName == tableName)
 							{
-								// we ignore view here
+								// no view
 								continue;
 							}
 						}
 
-						// View columns
+						// read the fucking columns
 						List<DbColumn> columns = ReadColumns(tableName);
 
 						// read columns description
@@ -280,6 +280,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 		/// </summary>
 		private List<DbView> ReadViews()
 		{
+			// this fucking shit doesn't support views!
 			return new List<DbView>();
 		}
 
@@ -318,6 +319,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 
 						AutoIncrement = Common.TryConvertBoolean(dr["AUTOINC_INCREMENT"], false),
 						//PrimaryKey = Convert.ToBoolean(dr["IsKey"]),
+						UserDescription = dr["DESCRIPTION"].ToString()
 					};
 
 					var dotNetType = _sqlCeDataTypes.First(x => x.TypeName == column.DataTypeDb);
@@ -400,6 +402,9 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 							// find description if there is any
 							foreach (var column in columns)
 							{
+								if (!string.IsNullOrEmpty(column.UserDescription))
+									continue;
+
 								// filter row to find the column
 								descriptionData.DefaultView.RowFilter = " ObjectName='" + column.FieldNameDb + "' ";
 								if (descriptionData.DefaultView.Count > 0)
@@ -467,6 +472,11 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 							if (primaryKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == manyMultiplicityKey_Local.ForeignKeyName))
 								continue;
 
+							manyMultiplicityKey_Local.UpdateAction =
+								ConvertSqlCeForeignKeyAction(keyRow["UPDATE_RULE"].ToString());
+							manyMultiplicityKey_Local.DeleteAction =
+								ConvertSqlCeForeignKeyAction(keyRow["DELETE_RULE"].ToString());
+
 							// to the list
 							primaryKeyTable.ForeignKeys.Add(manyMultiplicityKey_Local);
 
@@ -512,6 +522,11 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 							if (foreignKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == oneMultiplicityKey_Foreign.ForeignKeyName))
 								continue;
 
+							oneMultiplicityKey_Foreign.UpdateAction =
+								ConvertSqlCeForeignKeyAction(keyRow["UPDATE_RULE"].ToString());
+							oneMultiplicityKey_Foreign.DeleteAction =
+								ConvertSqlCeForeignKeyAction(keyRow["DELETE_RULE"].ToString());
+
 							// to the list
 							foreignKeyTable.ForeignKeys.Add(oneMultiplicityKey_Foreign);
 
@@ -545,6 +560,27 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 			finally
 			{
 				_dbConnection.Close();
+			}
+		}
+
+		private DbForeignKeyAction ConvertSqlCeForeignKeyAction(string action)
+		{
+			switch (action)
+			{
+				case "NO ACTION":
+					return DbForeignKeyAction.NoAction;
+
+				case "CASCADE":
+					return DbForeignKeyAction.Cascade;
+
+				case "SET NULL":
+					return DbForeignKeyAction.SetNull;
+
+				case "SET DEFAULT":
+					return DbForeignKeyAction.SetDefault;
+
+				default:
+					return DbForeignKeyAction.NotSet;
 			}
 		}
 

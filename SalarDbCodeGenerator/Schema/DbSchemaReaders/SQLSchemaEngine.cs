@@ -500,14 +500,14 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 																			ForeignTableName = keysDataRow["FKTable"].ToString(),
 																			Multiplicity = DbForeignKey.ForeignKeyMultiplicity.ManyToOne
 																		};
+									// check if it is already there
+									if (primaryKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == manyMultiplicityKey_Local.ForeignKeyName))
+										continue;
+
 									manyMultiplicityKey_Local.UpdateAction =
 										ConvertSqlServerForeignKeyAction(Convert.ToInt32(keysDataRow["update_referential_action"].ToString()));
 									manyMultiplicityKey_Local.DeleteAction =
 										ConvertSqlServerForeignKeyAction(Convert.ToInt32(keysDataRow["delete_referential_action"].ToString()));
-
-									// check if it is already there
-									if (primaryKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == manyMultiplicityKey_Local.ForeignKeyName))
-										continue;
 
 									// to the list
 									primaryKeyTable.ForeignKeys.Add(manyMultiplicityKey_Local);
@@ -549,14 +549,14 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 																			ForeignTableName = keysDataRow["PKTable"].ToString(),
 																			Multiplicity = DbForeignKey.ForeignKeyMultiplicity.OneToMany
 																		};
+									// check if it is already there
+									if (foreignKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == oneMultiplicityKey_Foreign.ForeignKeyName))
+										continue;
+
 									oneMultiplicityKey_Foreign.UpdateAction =
 										ConvertSqlServerForeignKeyAction(Convert.ToInt32(keysDataRow["update_referential_action"].ToString()));
 									oneMultiplicityKey_Foreign.DeleteAction =
 										ConvertSqlServerForeignKeyAction(Convert.ToInt32(keysDataRow["delete_referential_action"].ToString()));
-
-									// check if it is already there
-									if (foreignKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == oneMultiplicityKey_Foreign.ForeignKeyName))
-										continue;
 
 									// to the list
 									foreignKeyTable.ForeignKeys.Add(oneMultiplicityKey_Foreign);

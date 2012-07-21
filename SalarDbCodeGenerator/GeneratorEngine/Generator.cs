@@ -19,7 +19,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 	public class Generator
 	{
 		/// <summary>
-		/// Used as parameter where to apply the list
+		/// Where will pattern file apply
 		/// </summary>
 		private enum PatternFileWhereToApply { Both, Tables, Views, None }
 
@@ -42,14 +42,14 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 
 		#region public methods
 		/// <summary>
-		/// Generates output files
+		/// Let the engine start
 		/// </summary>
 		public void Generate()
 		{
 			string patternsFolder = Path.GetDirectoryName(
 				Common.AppVarPathMakeAbsolute(_projectDef.CodeGenSettings.CodeGenPatternFile));
 
-			// schema tables
+			// arrays! don't remember why I did this and too lazy to check! :)
 			var schemaTables = _database.SchemaTables.ToArray();
 			var schemaViews = _database.SchemaViews.ToArray();
 
@@ -66,7 +66,6 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 						// Check if pattern is selected by user
 						if (!_projectDef.CodeGenSettings.SelectedPatterns.Contains(fileName))
 						{
-							//continue;
 							return;
 						}
 
@@ -179,7 +178,7 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 				string fileName = Replacer_PatternFileName(patternFile.Options.FilePath, null, null, null);
 				fileName = Path.Combine(genPath, fileName);
 
-				// don't overwrite if exists an overwriting is not requested
+				// don't overwrite if exists and overwriting is not requested
 				if (patternFile.Options.Overwrite == false && File.Exists(fileName))
 					return;
 

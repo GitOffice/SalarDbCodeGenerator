@@ -14,12 +14,12 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 	public abstract class ExSchemaEngine : IDisposable
 	{
 		/// <summary>
-		/// Determines if the engine should read columns description, if is supported.
+		/// Determines if the engine should read columns description, if supported.
 		/// </summary>
 		public bool ReadColumnsDescription { get; set; }
 
 		/// <summary>
-		/// Determines if the engine should read tables foreign keys, if is supported.
+		/// Determines if the engine should read tables foreign keys, if supported.
 		/// </summary>
 		public bool ReadTablesForeignKeys { get; set; }
 

@@ -78,6 +78,16 @@ namespace SalarDbCodeGenerator.Schema.Patterns
 		FieldForeignKey,
 
 		/// <summary>
+		/// NotSet, NoAction, Cascade, SetNull, SetDefault, Restrict
+		/// </summary>
+		ForeignKeyUpdateAction,
+		
+		/// <summary>
+		/// NotSet, NoAction, Cascade, SetNull, SetDefault, Restrict
+		/// </summary>
+		ForeignKeyDeleteAction,
+
+		/// <summary>
 		/// AutoInrcementPrimaryKey ,AutoInrcement, PrimaryKey, AutoIncNativeNullable, AutoIncNullableType, NormalField, NativeNullable, NullableType
 		/// </summary>
 		FieldKeyType,

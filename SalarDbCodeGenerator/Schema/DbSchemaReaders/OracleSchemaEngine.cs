@@ -55,7 +55,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 		public override void FillSchema(DbDatabase schemaDatabase)
 		{
 			if (schemaDatabase == null)
-				throw new ArgumentNullException("schemaDatabase", "Database is not specifed.");
+				throw new ArgumentNullException("schemaDatabase", "Database is not specified.");
 
 			schemaDatabase.SchemaViews = ReadViews();
 			schemaDatabase.SchemaTables = ReadTables(schemaDatabase.SchemaViews);
@@ -430,7 +430,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 						NumericPrecision = Common.TryConvertInt32(dr["PRECISION"].ToString(), -1),
 						NumericScale = Common.TryConvertInt32(dr["SCALE"].ToString(), -1),
 
-						// needed to be readen
+						// needed to be read
 						AutoIncrement = false,
 						PrimaryKey = false,
 						UserDescription = ""
@@ -502,7 +502,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 
 					if (primaryKeyInfo != null && primaryKeyInfo.Length > 0)
 					{
-						// sorry! this is a primary key and is already added
+						// sorry! this is a primary key and it is already added
 						// next!
 						continue;
 					}
@@ -597,10 +597,11 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 					// check if it is already there
 					if (foreignKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == oneMultiplicityKey.ForeignKeyName))
 						continue;
-					//if (foreignKeyTable.ForeignKeys.Exists(x =>
-					//    x.ForeignColumnName == oneMultiplicityKey.ForeignColumnName &&
-					//    x.LocalColumnName == oneMultiplicityKey.LocalColumnName))
-					//    continue;
+
+					//oneMultiplicityKey.UpdateAction =
+					//    ConvertOracleForeignKeyAction(keysDataRow["UPDATE_RULE"].ToString());
+					oneMultiplicityKey.DeleteAction =
+						ConvertOracleForeignKeyAction(keysDataRow["DELETE_RULE"].ToString());
 
 					// to the list
 					foreignKeyTable.ForeignKeys.Add(oneMultiplicityKey);
@@ -646,10 +647,11 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 					// check if it is already there
 					if (primaryKeyTable.ForeignKeys.Exists(x => x.ForeignKeyName == manyMultiplicityKey.ForeignKeyName))
 						continue;
-					//if (primaryKeyTable.ForeignKeys.Exists(x =>
-					//    x.ForeignColumnName == manyMultiplicityKey.ForeignColumnName &&
-					//    x.LocalColumnName == manyMultiplicityKey.LocalColumnName))
-					//    continue;
+
+					//manyMultiplicityKey.UpdateAction =
+					//    ConvertOracleForeignKeyAction(keysDataRow["UPDATE_RULE"].ToString());
+					manyMultiplicityKey.DeleteAction =
+						ConvertOracleForeignKeyAction(keysDataRow["DELETE_RULE"].ToString());
 
 					// to the list
 					primaryKeyTable.ForeignKeys.Add(manyMultiplicityKey);
@@ -678,6 +680,30 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 						manyMultiplicityKey.ForeignColumn = null;
 					}
 				}
+			}
+		}
+
+		private DbForeignKeyAction ConvertOracleForeignKeyAction(string action)
+		{
+			switch (action)
+			{
+				case "NO ACTION":
+					return DbForeignKeyAction.NoAction;
+
+				case "CASCADE":
+					return DbForeignKeyAction.Cascade;
+
+				case "SET NULL":
+					return DbForeignKeyAction.SetNull;
+
+				case "SET DEFAULT":
+					return DbForeignKeyAction.SetDefault;
+
+				case "RESTRICT":
+					return DbForeignKeyAction.Restrict;
+
+				default:
+					return DbForeignKeyAction.NotSet;
 			}
 		}
 
@@ -820,7 +846,6 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 		/// </summary>
 		private void ApplyColumnsDescription(string tableName, List<DbColumn> columns)
 		{
-			//throw new NotSupportedException("Oracle doesn't have description field for columns.");
 			// there is no column!
 			if (columns.Count == 0)
 				return;
@@ -866,8 +891,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 			}
 			catch
 			{
-				// Seems this version of SQL Server doesn't support this query!
-				// don't stop here!
+				// something is wrong! don't stop here!
 				// TODO: inform user
 			}
 		}

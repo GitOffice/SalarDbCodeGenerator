@@ -124,6 +124,7 @@ namespace SalarDbCodeGenerator.Presentation
 
 				ProjectInstance.DbSettions.UseSqlAuthentication = rbtnOrclSpecificUsernamePass.Checked;
 
+				ProjectInstance.DbSettions.DatabaseName = txtOrclDbName.Text;
 				ProjectInstance.DbSettions.SqlUsername = txtOrclUsername.Text;
 				ProjectInstance.DbSettions.SqlPassword = txtOrclPassword.Text;
 				ProjectInstance.DbSettions.OracleUseSysdbaRole = chkOrclUserRoleSYSDBA.Checked;
@@ -208,6 +209,7 @@ namespace SalarDbCodeGenerator.Presentation
 				rbtnOrclSpecificUsernamePass.Checked = ProjectInstance.DbSettions.UseSqlAuthentication;
 				rbtnOrclWindowsAuthentication.Checked = !ProjectInstance.DbSettions.UseSqlAuthentication;
 
+				txtOrclDbName.Text = ProjectInstance.DbSettions.DatabaseName;
 				txtOrclUsername.Text = ProjectInstance.DbSettions.SqlUsername;
 				txtOrclPassword.Text = ProjectInstance.DbSettions.SqlPassword;
 				chkOrclUserRoleSYSDBA.Checked = ProjectInstance.DbSettions.OracleUseSysdbaRole;
@@ -716,10 +718,20 @@ namespace SalarDbCodeGenerator.Presentation
 								{
 									UseShellExecute = true,
 								});
+				MessageBox.Show("Oracle Connection String Template:\n\n" +
+				"(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=xxx.xxx.xxx.xxx)(PORT=xxxx)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=xxxxx)))\n\n" +
+				"Also visit http://www.connectionstrings.com/oracle#p12 for more information."
+				, "Params", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 			catch (Exception)
 			{
 			}
+		}
+
+		private void txtOrclUsername_TextChanged(object sender, EventArgs e)
+		{
+			if (txtOrclDbName.Text.Length == 0)
+				txtOrclDbName.Text = txtOrclUsername.Text;
 		}
 	}
 }

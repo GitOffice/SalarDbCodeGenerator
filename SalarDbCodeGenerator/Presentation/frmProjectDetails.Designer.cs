@@ -100,13 +100,13 @@
 			this.label27 = new System.Windows.Forms.Label();
 			this.label25 = new System.Windows.Forms.Label();
 			this.tabOracle = new System.Windows.Forms.TabPage();
+			this.lnkOracleConnStr = new System.Windows.Forms.LinkLabel();
 			this.chkOrclUserRoleSYSDBA = new System.Windows.Forms.CheckBox();
 			this.btnOrclTestConnection = new System.Windows.Forms.Button();
 			this.label18 = new System.Windows.Forms.Label();
 			this.rbtnOrclSpecificUsernamePass = new System.Windows.Forms.RadioButton();
 			this.txtOrclDataSource = new System.Windows.Forms.TextBox();
 			this.rbtnOrclWindowsAuthentication = new System.Windows.Forms.RadioButton();
-			this.label23 = new System.Windows.Forms.Label();
 			this.label20 = new System.Windows.Forms.Label();
 			this.txtOrclConnectTimeout = new System.Windows.Forms.TextBox();
 			this.label21 = new System.Windows.Forms.Label();
@@ -126,7 +126,8 @@
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.btnSlider = new System.Windows.Forms.Button();
 			this.dlgOpenSqlCe = new System.Windows.Forms.OpenFileDialog();
-			this.lnkOracleConnStr = new System.Windows.Forms.LinkLabel();
+			this.txtOrclDbName = new System.Windows.Forms.TextBox();
+			this.label23 = new System.Windows.Forms.Label();
 			this.groupBox4.SuspendLayout();
 			this.gpGenOptions.SuspendLayout();
 			this.groupBox3.SuspendLayout();
@@ -174,7 +175,7 @@
 			this.chkTableConstraintKeys.Location = new System.Drawing.Point(196, 19);
 			this.chkTableConstraintKeys.Name = "chkTableConstraintKeys";
 			this.chkTableConstraintKeys.Size = new System.Drawing.Size(132, 17);
-			this.chkTableConstraintKeys.TabIndex = 2;
+			this.chkTableConstraintKeys.TabIndex = 1;
 			this.chkTableConstraintKeys.Text = "Tables constraint keys";
 			this.tipHints.SetToolTip(this.chkTableConstraintKeys, "Supported in SQL Server (2005, 2008)");
 			this.chkTableConstraintKeys.UseVisualStyleBackColor = true;
@@ -195,7 +196,7 @@
 			this.chkGenDescription.Location = new System.Drawing.Point(31, 42);
 			this.chkGenDescription.Name = "chkGenDescription";
 			this.chkGenDescription.Size = new System.Drawing.Size(120, 17);
-			this.chkGenDescription.TabIndex = 1;
+			this.chkGenDescription.TabIndex = 2;
 			this.chkGenDescription.Text = "Columns description";
 			this.tipHints.SetToolTip(this.chkGenDescription, "Supported in SQL Server (Tables only, all versions)");
 			this.chkGenDescription.UseVisualStyleBackColor = true;
@@ -222,7 +223,7 @@
 			this.gpGenOptions.Location = new System.Drawing.Point(372, 12);
 			this.gpGenOptions.Name = "gpGenOptions";
 			this.gpGenOptions.Size = new System.Drawing.Size(323, 493);
-			this.gpGenOptions.TabIndex = 3;
+			this.gpGenOptions.TabIndex = 6;
 			this.gpGenOptions.TabStop = false;
 			this.gpGenOptions.Text = "Generation Options";
 			// 
@@ -240,7 +241,7 @@
 			this.groupBox3.Location = new System.Drawing.Point(11, 307);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(302, 176);
-			this.groupBox3.TabIndex = 3;
+			this.groupBox3.TabIndex = 10;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Renaming Options";
 			// 
@@ -362,7 +363,7 @@
 			this.btnDelIgnoredSuffixes.Location = new System.Drawing.Point(211, 153);
 			this.btnDelIgnoredSuffixes.Name = "btnDelIgnoredSuffixes";
 			this.btnDelIgnoredSuffixes.Size = new System.Drawing.Size(40, 23);
-			this.btnDelIgnoredSuffixes.TabIndex = 2;
+			this.btnDelIgnoredSuffixes.TabIndex = 5;
 			this.btnDelIgnoredSuffixes.UseVisualStyleBackColor = true;
 			this.btnDelIgnoredSuffixes.Click += new System.EventHandler(this.btnDelIgnoredSuffixes_Click);
 			// 
@@ -372,7 +373,7 @@
 			this.btnAddIgnoredSuffixes.Location = new System.Drawing.Point(165, 153);
 			this.btnAddIgnoredSuffixes.Name = "btnAddIgnoredSuffixes";
 			this.btnAddIgnoredSuffixes.Size = new System.Drawing.Size(40, 23);
-			this.btnAddIgnoredSuffixes.TabIndex = 2;
+			this.btnAddIgnoredSuffixes.TabIndex = 4;
 			this.btnAddIgnoredSuffixes.UseVisualStyleBackColor = true;
 			this.btnAddIgnoredSuffixes.Click += new System.EventHandler(this.btnAddIgnoredSuffixes_Click);
 			// 
@@ -392,7 +393,7 @@
 			this.btnAddIgnoredPrefixes.Location = new System.Drawing.Point(11, 153);
 			this.btnAddIgnoredPrefixes.Name = "btnAddIgnoredPrefixes";
 			this.btnAddIgnoredPrefixes.Size = new System.Drawing.Size(40, 23);
-			this.btnAddIgnoredPrefixes.TabIndex = 2;
+			this.btnAddIgnoredPrefixes.TabIndex = 1;
 			this.btnAddIgnoredPrefixes.UseVisualStyleBackColor = true;
 			this.btnAddIgnoredPrefixes.Click += new System.EventHandler(this.btnAddIgnoredPrefixes_Click);
 			// 
@@ -403,7 +404,7 @@
 			this.lstIgnoredSuffixes.Location = new System.Drawing.Point(165, 49);
 			this.lstIgnoredSuffixes.Name = "lstIgnoredSuffixes";
 			this.lstIgnoredSuffixes.Size = new System.Drawing.Size(148, 111);
-			this.lstIgnoredSuffixes.TabIndex = 1;
+			this.lstIgnoredSuffixes.TabIndex = 3;
 			// 
 			// lstIgnoredPrefixes
 			// 
@@ -438,7 +439,7 @@
 			this.txtSuffixForViews.MaxLength = 20;
 			this.txtSuffixForViews.Name = "txtSuffixForViews";
 			this.txtSuffixForViews.Size = new System.Drawing.Size(212, 20);
-			this.txtSuffixForViews.TabIndex = 0;
+			this.txtSuffixForViews.TabIndex = 9;
 			// 
 			// txtSuffixForTables
 			// 
@@ -446,7 +447,7 @@
 			this.txtSuffixForTables.MaxLength = 20;
 			this.txtSuffixForTables.Name = "txtSuffixForTables";
 			this.txtSuffixForTables.Size = new System.Drawing.Size(212, 20);
-			this.txtSuffixForTables.TabIndex = 0;
+			this.txtSuffixForTables.TabIndex = 7;
 			// 
 			// label14
 			// 
@@ -472,7 +473,7 @@
 			this.txtPrefixForViews.MaxLength = 20;
 			this.txtPrefixForViews.Name = "txtPrefixForViews";
 			this.txtPrefixForViews.Size = new System.Drawing.Size(212, 20);
-			this.txtPrefixForViews.TabIndex = 0;
+			this.txtPrefixForViews.TabIndex = 8;
 			// 
 			// label13
 			// 
@@ -489,7 +490,7 @@
 			this.txtPrefixForTables.MaxLength = 20;
 			this.txtPrefixForTables.Name = "txtPrefixForTables";
 			this.txtPrefixForTables.Size = new System.Drawing.Size(212, 20);
-			this.txtPrefixForTables.TabIndex = 0;
+			this.txtPrefixForTables.TabIndex = 6;
 			// 
 			// label11
 			// 
@@ -507,7 +508,7 @@
 			this.btnCancel.Location = new System.Drawing.Point(538, 511);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 5;
+			this.btnCancel.TabIndex = 4;
 			this.btnCancel.Text = "&Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			// 
@@ -517,7 +518,7 @@
 			this.btnOk.Location = new System.Drawing.Point(619, 511);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.Size = new System.Drawing.Size(75, 23);
-			this.btnOk.TabIndex = 4;
+			this.btnOk.TabIndex = 3;
 			this.btnOk.Text = "&OK";
 			this.btnOk.UseVisualStyleBackColor = true;
 			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -546,7 +547,7 @@
 			this.btnPatternProject.Location = new System.Drawing.Point(318, 101);
 			this.btnPatternProject.Name = "btnPatternProject";
 			this.btnPatternProject.Size = new System.Drawing.Size(28, 20);
-			this.btnPatternProject.TabIndex = 3;
+			this.btnPatternProject.TabIndex = 5;
 			this.btnPatternProject.Text = "...";
 			this.btnPatternProject.UseVisualStyleBackColor = true;
 			this.btnPatternProject.Click += new System.EventHandler(this.btnPatternProject_Click);
@@ -554,7 +555,7 @@
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(28, 104);
+			this.label8.Location = new System.Drawing.Point(31, 104);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(79, 13);
 			this.label8.TabIndex = 1;
@@ -593,7 +594,7 @@
 			this.txtPatternfile.Location = new System.Drawing.Point(116, 101);
 			this.txtPatternfile.Name = "txtPatternfile";
 			this.txtPatternfile.Size = new System.Drawing.Size(200, 20);
-			this.txtPatternfile.TabIndex = 2;
+			this.txtPatternfile.TabIndex = 4;
 			// 
 			// label1
 			// 
@@ -650,7 +651,7 @@
 			this.pagerDatabaseProvider.SelectedIndex = 0;
 			this.pagerDatabaseProvider.ShowToolTips = true;
 			this.pagerDatabaseProvider.Size = new System.Drawing.Size(340, 250);
-			this.pagerDatabaseProvider.TabIndex = 3;
+			this.pagerDatabaseProvider.TabIndex = 0;
 			// 
 			// tabSQLServer
 			// 
@@ -678,10 +679,10 @@
 			// 
 			// btnSqlTestConnection
 			// 
-			this.btnSqlTestConnection.Location = new System.Drawing.Point(106, 188);
+			this.btnSqlTestConnection.Location = new System.Drawing.Point(106, 182);
 			this.btnSqlTestConnection.Name = "btnSqlTestConnection";
 			this.btnSqlTestConnection.Size = new System.Drawing.Size(98, 23);
-			this.btnSqlTestConnection.TabIndex = 6;
+			this.btnSqlTestConnection.TabIndex = 7;
 			this.btnSqlTestConnection.Text = "Test connection";
 			this.btnSqlTestConnection.UseVisualStyleBackColor = true;
 			this.btnSqlTestConnection.Click += new System.EventHandler(this.btnTestConnection_Click);
@@ -689,7 +690,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(22, 9);
+			this.label2.Location = new System.Drawing.Point(21, 9);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(79, 13);
 			this.label2.TabIndex = 1;
@@ -698,10 +699,10 @@
 			// rbtnSqlAuthentication
 			// 
 			this.rbtnSqlAuthentication.AutoSize = true;
-			this.rbtnSqlAuthentication.Location = new System.Drawing.Point(106, 113);
+			this.rbtnSqlAuthentication.Location = new System.Drawing.Point(106, 107);
 			this.rbtnSqlAuthentication.Name = "rbtnSqlAuthentication";
 			this.rbtnSqlAuthentication.Size = new System.Drawing.Size(116, 17);
-			this.rbtnSqlAuthentication.TabIndex = 3;
+			this.rbtnSqlAuthentication.TabIndex = 4;
 			this.rbtnSqlAuthentication.Text = "SQL authentication";
 			this.rbtnSqlAuthentication.UseVisualStyleBackColor = true;
 			// 
@@ -716,10 +717,10 @@
 			// 
 			this.rbtnSqlWindowsAuthentication.AutoSize = true;
 			this.rbtnSqlWindowsAuthentication.Checked = true;
-			this.rbtnSqlWindowsAuthentication.Location = new System.Drawing.Point(106, 90);
+			this.rbtnSqlWindowsAuthentication.Location = new System.Drawing.Point(106, 84);
 			this.rbtnSqlWindowsAuthentication.Name = "rbtnSqlWindowsAuthentication";
 			this.rbtnSqlWindowsAuthentication.Size = new System.Drawing.Size(139, 17);
-			this.rbtnSqlWindowsAuthentication.TabIndex = 2;
+			this.rbtnSqlWindowsAuthentication.TabIndex = 3;
 			this.rbtnSqlWindowsAuthentication.TabStop = true;
 			this.rbtnSqlWindowsAuthentication.Text = "Windows authentication";
 			this.rbtnSqlWindowsAuthentication.UseVisualStyleBackColor = true;
@@ -734,7 +735,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(47, 165);
+			this.label5.Location = new System.Drawing.Point(44, 159);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(56, 13);
 			this.label5.TabIndex = 1;
@@ -746,13 +747,13 @@
 			this.txtSqlConnectTimeout.MaxLength = 3;
 			this.txtSqlConnectTimeout.Name = "txtSqlConnectTimeout";
 			this.txtSqlConnectTimeout.Size = new System.Drawing.Size(200, 20);
-			this.txtSqlConnectTimeout.TabIndex = 1;
+			this.txtSqlConnectTimeout.TabIndex = 2;
 			this.txtSqlConnectTimeout.Text = "15";
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(45, 139);
+			this.label4.Location = new System.Drawing.Point(42, 133);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(58, 13);
 			this.label4.TabIndex = 1;
@@ -760,10 +761,10 @@
 			// 
 			// txtSqlUsername
 			// 
-			this.txtSqlUsername.Location = new System.Drawing.Point(106, 136);
+			this.txtSqlUsername.Location = new System.Drawing.Point(106, 130);
 			this.txtSqlUsername.Name = "txtSqlUsername";
 			this.txtSqlUsername.Size = new System.Drawing.Size(200, 20);
-			this.txtSqlUsername.TabIndex = 4;
+			this.txtSqlUsername.TabIndex = 5;
 			// 
 			// label15
 			// 
@@ -776,15 +777,15 @@
 			// 
 			// txtSqlPassword
 			// 
-			this.txtSqlPassword.Location = new System.Drawing.Point(106, 162);
+			this.txtSqlPassword.Location = new System.Drawing.Point(106, 156);
 			this.txtSqlPassword.Name = "txtSqlPassword";
 			this.txtSqlPassword.Size = new System.Drawing.Size(200, 20);
-			this.txtSqlPassword.TabIndex = 5;
+			this.txtSqlPassword.TabIndex = 6;
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(18, 35);
+			this.label3.Location = new System.Drawing.Point(15, 35);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(85, 13);
 			this.label3.TabIndex = 1;
@@ -845,7 +846,7 @@
 			// label27
 			// 
 			this.label27.AutoSize = true;
-			this.label27.Location = new System.Drawing.Point(44, 73);
+			this.label27.Location = new System.Drawing.Point(51, 74);
 			this.label27.Name = "label27";
 			this.label27.Size = new System.Drawing.Size(56, 13);
 			this.label27.TabIndex = 22;
@@ -862,6 +863,8 @@
 			// 
 			// tabOracle
 			// 
+			this.tabOracle.Controls.Add(this.txtOrclDbName);
+			this.tabOracle.Controls.Add(this.label23);
 			this.tabOracle.Controls.Add(this.lnkOracleConnStr);
 			this.tabOracle.Controls.Add(this.chkOrclUserRoleSYSDBA);
 			this.tabOracle.Controls.Add(this.btnOrclTestConnection);
@@ -869,7 +872,6 @@
 			this.tabOracle.Controls.Add(this.rbtnOrclSpecificUsernamePass);
 			this.tabOracle.Controls.Add(this.txtOrclDataSource);
 			this.tabOracle.Controls.Add(this.rbtnOrclWindowsAuthentication);
-			this.tabOracle.Controls.Add(this.label23);
 			this.tabOracle.Controls.Add(this.label20);
 			this.tabOracle.Controls.Add(this.txtOrclConnectTimeout);
 			this.tabOracle.Controls.Add(this.label21);
@@ -885,22 +887,33 @@
 			this.tabOracle.ToolTipText = "Oracle 8i/ 9i/ 10g/ 11g";
 			this.tabOracle.UseVisualStyleBackColor = true;
 			// 
+			// lnkOracleConnStr
+			// 
+			this.lnkOracleConnStr.AutoSize = true;
+			this.lnkOracleConnStr.Location = new System.Drawing.Point(308, 9);
+			this.lnkOracleConnStr.Name = "lnkOracleConnStr";
+			this.lnkOracleConnStr.Size = new System.Drawing.Size(13, 13);
+			this.lnkOracleConnStr.TabIndex = 1;
+			this.lnkOracleConnStr.TabStop = true;
+			this.lnkOracleConnStr.Text = "?";
+			this.lnkOracleConnStr.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkOracleConnStr_LinkClicked);
+			// 
 			// chkOrclUserRoleSYSDBA
 			// 
 			this.chkOrclUserRoleSYSDBA.AutoSize = true;
-			this.chkOrclUserRoleSYSDBA.Location = new System.Drawing.Point(106, 162);
+			this.chkOrclUserRoleSYSDBA.Location = new System.Drawing.Point(218, 186);
 			this.chkOrclUserRoleSYSDBA.Name = "chkOrclUserRoleSYSDBA";
 			this.chkOrclUserRoleSYSDBA.Size = new System.Drawing.Size(69, 17);
-			this.chkOrclUserRoleSYSDBA.TabIndex = 6;
+			this.chkOrclUserRoleSYSDBA.TabIndex = 8;
 			this.chkOrclUserRoleSYSDBA.Text = "SYSDBA";
 			this.chkOrclUserRoleSYSDBA.UseVisualStyleBackColor = true;
 			// 
 			// btnOrclTestConnection
 			// 
-			this.btnOrclTestConnection.Location = new System.Drawing.Point(106, 185);
+			this.btnOrclTestConnection.Location = new System.Drawing.Point(106, 182);
 			this.btnOrclTestConnection.Name = "btnOrclTestConnection";
 			this.btnOrclTestConnection.Size = new System.Drawing.Size(98, 23);
-			this.btnOrclTestConnection.TabIndex = 7;
+			this.btnOrclTestConnection.TabIndex = 9;
 			this.btnOrclTestConnection.Text = "Test connection";
 			this.btnOrclTestConnection.UseVisualStyleBackColor = true;
 			this.btnOrclTestConnection.Click += new System.EventHandler(this.btnOrclTestConnection_Click);
@@ -918,10 +931,10 @@
 			// 
 			this.rbtnOrclSpecificUsernamePass.AutoSize = true;
 			this.rbtnOrclSpecificUsernamePass.Checked = true;
-			this.rbtnOrclSpecificUsernamePass.Location = new System.Drawing.Point(106, 87);
+			this.rbtnOrclSpecificUsernamePass.Location = new System.Drawing.Point(106, 81);
 			this.rbtnOrclSpecificUsernamePass.Name = "rbtnOrclSpecificUsernamePass";
 			this.rbtnOrclSpecificUsernamePass.Size = new System.Drawing.Size(181, 17);
-			this.rbtnOrclSpecificUsernamePass.TabIndex = 3;
+			this.rbtnOrclSpecificUsernamePass.TabIndex = 4;
 			this.rbtnOrclSpecificUsernamePass.TabStop = true;
 			this.rbtnOrclSpecificUsernamePass.Text = "Specific username and password";
 			this.rbtnOrclSpecificUsernamePass.UseVisualStyleBackColor = true;
@@ -936,26 +949,17 @@
 			// rbtnOrclWindowsAuthentication
 			// 
 			this.rbtnOrclWindowsAuthentication.AutoSize = true;
-			this.rbtnOrclWindowsAuthentication.Location = new System.Drawing.Point(106, 64);
+			this.rbtnOrclWindowsAuthentication.Location = new System.Drawing.Point(106, 58);
 			this.rbtnOrclWindowsAuthentication.Name = "rbtnOrclWindowsAuthentication";
 			this.rbtnOrclWindowsAuthentication.Size = new System.Drawing.Size(139, 17);
-			this.rbtnOrclWindowsAuthentication.TabIndex = 2;
+			this.rbtnOrclWindowsAuthentication.TabIndex = 3;
 			this.rbtnOrclWindowsAuthentication.Text = "Windows authentication";
 			this.rbtnOrclWindowsAuthentication.UseVisualStyleBackColor = true;
-			// 
-			// label23
-			// 
-			this.label23.AutoSize = true;
-			this.label23.Location = new System.Drawing.Point(68, 163);
-			this.label23.Name = "label23";
-			this.label23.Size = new System.Drawing.Size(32, 13);
-			this.label23.TabIndex = 14;
-			this.label23.Text = "Role:";
 			// 
 			// label20
 			// 
 			this.label20.AutoSize = true;
-			this.label20.Location = new System.Drawing.Point(44, 139);
+			this.label20.Location = new System.Drawing.Point(44, 133);
 			this.label20.Name = "label20";
 			this.label20.Size = new System.Drawing.Size(56, 13);
 			this.label20.TabIndex = 14;
@@ -967,13 +971,13 @@
 			this.txtOrclConnectTimeout.MaxLength = 3;
 			this.txtOrclConnectTimeout.Name = "txtOrclConnectTimeout";
 			this.txtOrclConnectTimeout.Size = new System.Drawing.Size(200, 20);
-			this.txtOrclConnectTimeout.TabIndex = 1;
+			this.txtOrclConnectTimeout.TabIndex = 2;
 			this.txtOrclConnectTimeout.Text = "15";
 			// 
 			// label21
 			// 
 			this.label21.AutoSize = true;
-			this.label21.Location = new System.Drawing.Point(42, 113);
+			this.label21.Location = new System.Drawing.Point(42, 107);
 			this.label21.Name = "label21";
 			this.label21.Size = new System.Drawing.Size(58, 13);
 			this.label21.TabIndex = 11;
@@ -981,10 +985,11 @@
 			// 
 			// txtOrclUsername
 			// 
-			this.txtOrclUsername.Location = new System.Drawing.Point(106, 110);
+			this.txtOrclUsername.Location = new System.Drawing.Point(106, 104);
 			this.txtOrclUsername.Name = "txtOrclUsername";
 			this.txtOrclUsername.Size = new System.Drawing.Size(200, 20);
-			this.txtOrclUsername.TabIndex = 4;
+			this.txtOrclUsername.TabIndex = 5;
+			this.txtOrclUsername.TextChanged += new System.EventHandler(this.txtOrclUsername_TextChanged);
 			// 
 			// label22
 			// 
@@ -997,10 +1002,10 @@
 			// 
 			// txtOrclPassword
 			// 
-			this.txtOrclPassword.Location = new System.Drawing.Point(106, 136);
+			this.txtOrclPassword.Location = new System.Drawing.Point(106, 130);
 			this.txtOrclPassword.Name = "txtOrclPassword";
 			this.txtOrclPassword.Size = new System.Drawing.Size(200, 20);
-			this.txtOrclPassword.TabIndex = 5;
+			this.txtOrclPassword.TabIndex = 6;
 			// 
 			// tabSQLite
 			// 
@@ -1026,7 +1031,7 @@
 			this.btnSQLiteSelectDatabase.Location = new System.Drawing.Point(106, 32);
 			this.btnSQLiteSelectDatabase.Name = "btnSQLiteSelectDatabase";
 			this.btnSQLiteSelectDatabase.Size = new System.Drawing.Size(98, 23);
-			this.btnSQLiteSelectDatabase.TabIndex = 19;
+			this.btnSQLiteSelectDatabase.TabIndex = 1;
 			this.btnSQLiteSelectDatabase.Text = "Browse";
 			this.btnSQLiteSelectDatabase.UseVisualStyleBackColor = true;
 			this.btnSQLiteSelectDatabase.Click += new System.EventHandler(this.btnSQLiteSelectDatabase_Click);
@@ -1036,7 +1041,7 @@
 			this.btnSQLiteTestConnection.Location = new System.Drawing.Point(106, 122);
 			this.btnSQLiteTestConnection.Name = "btnSQLiteTestConnection";
 			this.btnSQLiteTestConnection.Size = new System.Drawing.Size(98, 23);
-			this.btnSQLiteTestConnection.TabIndex = 19;
+			this.btnSQLiteTestConnection.TabIndex = 4;
 			this.btnSQLiteTestConnection.Text = "Test connection";
 			this.btnSQLiteTestConnection.UseVisualStyleBackColor = true;
 			this.btnSQLiteTestConnection.Click += new System.EventHandler(this.btnSQLiteTestConnection_Click);
@@ -1056,7 +1061,7 @@
 			this.txtSQLiteDatabaseName.Name = "txtSQLiteDatabaseName";
 			this.txtSQLiteDatabaseName.ReadOnly = true;
 			this.txtSQLiteDatabaseName.Size = new System.Drawing.Size(200, 20);
-			this.txtSQLiteDatabaseName.TabIndex = 7;
+			this.txtSQLiteDatabaseName.TabIndex = 0;
 			// 
 			// label17
 			// 
@@ -1073,7 +1078,7 @@
 			this.txtSQLiteConnectTimeout.MaxLength = 3;
 			this.txtSQLiteConnectTimeout.Name = "txtSQLiteConnectTimeout";
 			this.txtSQLiteConnectTimeout.Size = new System.Drawing.Size(200, 20);
-			this.txtSQLiteConnectTimeout.TabIndex = 9;
+			this.txtSQLiteConnectTimeout.TabIndex = 2;
 			this.txtSQLiteConnectTimeout.Text = "30";
 			// 
 			// label19
@@ -1090,7 +1095,7 @@
 			this.txtSQLitePassword.Location = new System.Drawing.Point(106, 96);
 			this.txtSQLitePassword.Name = "txtSQLitePassword";
 			this.txtSQLitePassword.Size = new System.Drawing.Size(200, 20);
-			this.txtSQLitePassword.TabIndex = 18;
+			this.txtSQLitePassword.TabIndex = 3;
 			// 
 			// panel1
 			// 
@@ -1099,7 +1104,7 @@
 			this.panel1.Location = new System.Drawing.Point(699, 0);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(10, 541);
-			this.panel1.TabIndex = 6;
+			this.panel1.TabIndex = 5;
 			// 
 			// btnSlider
 			// 
@@ -1121,16 +1126,21 @@
 			this.dlgOpenSqlCe.Filter = "SqlCE 4 Database (*.sdf;*.*)|*.sdf;*.*";
 			this.dlgOpenSqlCe.Title = "Select SqlCE 4 database";
 			// 
-			// lnkOracleConnStr
+			// txtOrclDbName
 			// 
-			this.lnkOracleConnStr.AutoSize = true;
-			this.lnkOracleConnStr.Location = new System.Drawing.Point(308, 9);
-			this.lnkOracleConnStr.Name = "lnkOracleConnStr";
-			this.lnkOracleConnStr.Size = new System.Drawing.Size(13, 13);
-			this.lnkOracleConnStr.TabIndex = 15;
-			this.lnkOracleConnStr.TabStop = true;
-			this.lnkOracleConnStr.Text = "?";
-			this.lnkOracleConnStr.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkOracleConnStr_LinkClicked);
+			this.txtOrclDbName.Location = new System.Drawing.Point(106, 156);
+			this.txtOrclDbName.Name = "txtOrclDbName";
+			this.txtOrclDbName.Size = new System.Drawing.Size(200, 20);
+			this.txtOrclDbName.TabIndex = 7;
+			// 
+			// label23
+			// 
+			this.label23.AutoSize = true;
+			this.label23.Location = new System.Drawing.Point(15, 159);
+			this.label23.Name = "label23";
+			this.label23.Size = new System.Drawing.Size(85, 13);
+			this.label23.TabIndex = 16;
+			this.label23.Text = "Database name:";
 			// 
 			// frmProjectDetails
 			// 
@@ -1241,7 +1251,6 @@
 		private System.Windows.Forms.RadioButton rbtnOrclSpecificUsernamePass;
 		private System.Windows.Forms.TextBox txtOrclDataSource;
 		private System.Windows.Forms.RadioButton rbtnOrclWindowsAuthentication;
-		private System.Windows.Forms.Label label23;
 		private System.Windows.Forms.Label label20;
 		private System.Windows.Forms.TextBox txtOrclConnectTimeout;
 		private System.Windows.Forms.Label label21;
@@ -1270,5 +1279,7 @@
 		private System.Windows.Forms.TextBox txtSqlCePassword;
 		private System.Windows.Forms.OpenFileDialog dlgOpenSqlCe;
 		private System.Windows.Forms.LinkLabel lnkOracleConnStr;
+		private System.Windows.Forms.TextBox txtOrclDbName;
+		private System.Windows.Forms.Label label23;
 	}
 }
