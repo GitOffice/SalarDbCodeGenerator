@@ -430,18 +430,19 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 			 */
 
 			// GENERAL command format
-			string foreignKeySql = "SELECT OBJECT_NAME(f.constid) AS 'ForeignKey', OBJECT_NAME(f.fkeyid) AS 'FKTable', " +
-				" c1.name AS 'FKColumnName', OBJECT_NAME(f.rkeyid) AS 'PKTable', c2.name AS 'PKColumnName' , -1 as update_referential_action, -1 as delete_referential_action " +
-				" FROM sysforeignkeys AS f INNER JOIN " +
-				"syscolumns AS c1 ON f.fkeyid = c1.id AND f.fkey = c1.colid INNER JOIN " +
-				"syscolumns AS c2 ON f.rkeyid = c2.id AND f.rkey = c2.colid " +
-				"ORDER BY OBJECT_NAME(f.rkeyid) ";
+			string foreignKeySql = @"SELECT OBJECT_NAME(f.constid) AS 'ForeignKey', OBJECT_NAME(f.fkeyid) AS 'FKTable',
+										c1.name AS 'FKColumnName', OBJECT_NAME(f.rkeyid) AS 'PKTable', c2.name AS 'PKColumnName' ,
+										-1 as update_referential_action, -1 as delete_referential_action  
+									FROM sysforeignkeys AS f 
+										INNER JOIN syscolumns AS c1 ON f.fkeyid = c1.id AND f.fkey = c1.colid 
+										INNER JOIN syscolumns AS c2 ON f.rkeyid = c2.id AND f.rkey = c2.colid 
+									ORDER BY c1.colid ";
 
 			// NEW command format
 			if (sqlServer > SQLServerVersions.SQL2000)
 			{
 				foreignKeySql =
-					@"SELECT        CONVERT(SYSNAME, DB_NAME()) AS PKTABLE_QUALIFIER, CONVERT(SYSNAME, SCHEMA_NAME(O1.schema_id)) AS PKTABLE_OWNER, CONVERT(SYSNAME, 
+					@"SELECT CONVERT(SYSNAME, DB_NAME()) AS PKTABLE_QUALIFIER, CONVERT(SYSNAME, SCHEMA_NAME(O1.schema_id)) AS PKTABLE_OWNER, CONVERT(SYSNAME, 
 						O1.name) AS 'PKTable', CONVERT(SYSNAME, C1.name) AS 'PKColumnName', CONVERT(SYSNAME, DB_NAME()) AS FKTABLE_QUALIFIER, 
 						CONVERT(SYSNAME, SCHEMA_NAME(O2.schema_id)) AS FKTABLE_OWNER, CONVERT(SYSNAME, O2.name) AS 'FKTable', CONVERT(SYSNAME, C2.name) 
 						AS 'FKColumnName', CONVERT(SMALLINT, CASE OBJECTPROPERTY(F.OBJECT_ID, 'CnstIsUpdateCascade') WHEN 1 THEN 0 ELSE 1 END) AS UPDATE_RULE, 
@@ -454,7 +455,8 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 						sys.indexes AS I ON F.referenced_object_id = I.object_id AND F.key_index_id = I.index_id ON O1.object_id = F.referenced_object_id INNER JOIN
 						sys.all_objects AS O2 ON F.parent_object_id = O2.object_id INNER JOIN
 						sys.all_columns AS C1 ON F.referenced_object_id = C1.object_id AND K.referenced_column_id = C1.column_id INNER JOIN
-						sys.all_columns AS C2 ON F.parent_object_id = C2.object_id AND K.parent_column_id = C2.column_id";
+						sys.all_columns AS C2 ON F.parent_object_id = C2.object_id AND K.parent_column_id = C2.column_id
+					ORDER BY C2.column_id";
 			}
 
 			try

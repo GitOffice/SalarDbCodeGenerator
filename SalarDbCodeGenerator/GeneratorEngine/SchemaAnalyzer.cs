@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SalarDbCodeGenerator.DbProject;
 using SalarDbCodeGenerator.Schema;
 using SalarDbCodeGenerator.Schema.Database;
-using SalarDbCodeGenerator.Schema.DbSchemaReaders;
 using SalarDbCodeGenerator.Schema.Patterns;
 
 // ====================================
@@ -645,7 +643,6 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 			if (string.IsNullOrWhiteSpace(name))
 				return name;
 
-			//var spliterRegex = new Regex(@"[A-Z0-9]*[a-z0-9]*|[_]*", RegexOptions.Compiled);
 			var underlineSplit = name.Split(new char[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
 
 			bool shoulRemoveUnderline = false;

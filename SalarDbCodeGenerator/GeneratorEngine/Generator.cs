@@ -12,7 +12,7 @@ using SalarDbCodeGenerator.Schema.Patterns;
 // http://SalarDbCodeGenerator.codeplex.com
 // Salar Khalilzadeh <salar2k@gmail.com>
 // © 2012, All rights reserved
-// 2012/07/07
+// 2012/07/21
 // ====================================
 namespace SalarDbCodeGenerator.GeneratorEngine
 {
@@ -1314,21 +1314,21 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 
 				case PatternConditionKeyMode.TableForeignKey:
 
-					var normalKeyReplacer = partialContent.GetReplacement(ConditionKeyModeConsts.TableForeignKey.NormalKey);
+					var normalKeyReplacer = partialContent.GetFirst();
 
 					// Replace the contents
 					return Replacer_ConditionItem_AppliesToForeignKeys(normalKeyReplacer.ContentText, table);
 
 				case PatternConditionKeyMode.TableIndexConstraint:
 
-					var indexConstraintReplacer = partialContent.GetReplacement(ConditionKeyModeConsts.TableIndexConstraint.NormalKey);
+					var indexConstraintReplacer = partialContent.GetFirst();
 
 					// Replace the contents
 					return Replacer_ConditionItem_AppliesToIndexConstraints(indexConstraintReplacer.ContentText, table, false);
 
 				case PatternConditionKeyMode.TableUniqueConstraint:
 
-					var uniqueConstraintReplacer = partialContent.GetReplacement(ConditionKeyModeConsts.TableUniqueConstraint.NormalKey);
+					var uniqueConstraintReplacer = partialContent.GetFirst();
 
 					// Replace the contents
 					return Replacer_ConditionItem_AppliesToIndexConstraints(uniqueConstraintReplacer.ContentText, table, true);
@@ -1467,8 +1467,6 @@ namespace SalarDbCodeGenerator.GeneratorEngine
 
 					// Replace the contents
 					return Replacer_ConditionItem_AppliesToColumn(primaryReplacer.ContentText, table, column);
-
-
 
 				case PatternConditionKeyMode.FieldReferencedKeyType:
 				case PatternConditionKeyMode.FieldKeyType:

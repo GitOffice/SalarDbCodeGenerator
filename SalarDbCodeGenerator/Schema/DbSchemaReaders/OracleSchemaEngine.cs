@@ -510,7 +510,7 @@ namespace SalarDbCodeGenerator.Schema.DbSchemaReaders
 					const string STR_IndexUniqueName = "UNIQUE";
 					const string STR_IndexNonUniqueName = "NONUNIQUE";
 
-					// constraint Key
+					// constraint Key and its uniqueness
 					var constraintKey = new DbConstraintKey()
 					{
 						IsUnique = (keyRow["UNIQUENESS"].ToString() == STR_IndexUniqueName),
