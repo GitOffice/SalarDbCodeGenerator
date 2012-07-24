@@ -96,6 +96,11 @@ namespace SalarDbCodeGenerator
 					ProjectsList.RemoveAt(ProjectsList.Count - 1);
 				}
 			}
+
+			public void RemoveFile(string fileNamePath)
+			{
+				ProjectsList.Remove(fileNamePath);
+			}
 		}
 
 		public frmCodeGen()
@@ -688,6 +693,17 @@ namespace SalarDbCodeGenerator
 		}
 		void UiAction_OpenProjectDirect(string projectFile)
 		{
+			if (!File.Exists(projectFile))
+			{
+				if (MessageBox.Show("Project file does not exists:\n" + projectFile + "\n\nWould you like to remove it from recent list?", "Open project", MessageBoxButtons.YesNo,
+								MessageBoxIcon.Stop) == DialogResult.Yes)
+				{
+					_recentProjects.RemoveFile(projectFile);
+					_recentProjects.Rebuild();
+				}
+				return;
+			}
+
 			try
 			{
 				ProjectDefinaton openProject = ProjectDefinaton.LoadFromFile(projectFile);
@@ -932,7 +948,7 @@ namespace SalarDbCodeGenerator
 		}
 		private void frmCodeGen_Shown(object sender, EventArgs e)
 		{
-			this.Text += " " + SalarDbCodeGenerator.DbProject.AppConfig.AppVersionFull;
+			this.Text += " " + AppConfig.AppVersionFull;
 			_canFireEvents = true;
 
 			try
@@ -965,7 +981,7 @@ namespace SalarDbCodeGenerator
 
 		private void mnuReopenRecentFile_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+			var menu = (ToolStripMenuItem)sender;
 			UiAction_OpenProjectDirect(menu.Tag.ToString());
 		}
 
@@ -980,7 +996,7 @@ namespace SalarDbCodeGenerator
 
 			try
 			{
-				ProcessStartInfo info = new ProcessStartInfo(generationPath);
+				var info = new ProcessStartInfo(generationPath);
 				info.UseShellExecute = true;
 				Process.Start(info);
 			}
@@ -1068,49 +1084,16 @@ namespace SalarDbCodeGenerator
 
 		private void treGenFiles_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			string tag = (string)e.Node.Tag;
+			var tag = (string)e.Node.Tag;
 			try
 			{
-
-				switch (tag)
+				if (tag == "file")
 				{
-					case "file":
-						string fileName = Path.Combine(e.Node.ToolTipText, e.Node.Text);
-						//string ext = Path.GetExtension(fileName).ToLower();
-						//switch (ext)
-						//{
-						//    case ".cs":
-						//        txtGenCSharpFile.Document = synCSharpDoc;
-						//        break;
-						//    case ".vb":
-						//        txtGenCSharpFile.Document = synVBNetDoc;
-						//        break;
-						//    case ".sql":
-						//        txtGenCSharpFile.Document = synTSQL;
-						//        break;
-						//    case ".config":
-						//    case ".csproj":
-						//    case ".vbproj":
-						//        txtGenCSharpFile.Document = synXML;
-						//        break;
-						//    default:
-						//        break;
-						//}
-						//txtGenCSharpFile.Document.Text = File.ReadAllText(fileName);
-						//txtGenCSharpFile.Document.UnFoldAll();
-						//txtGenCSharpFile.Document.PointToIntPos(new Draco.Controls.CodeEditor.Syntax.TextPoint(0, 0));
+					string fileName = Path.Combine(e.Node.ToolTipText, e.Node.Text);
 
-						// ------------------------
-						txtCodeEditor.LoadFile(fileName);
-						txtCodeEditor.IsReadOnly = true;
-						break;
-
-					case "folder":
-					default:
-						break;
+					txtCodeEditor.LoadFile(fileName);
+					txtCodeEditor.IsReadOnly = true;
 				}
-
-
 			}
 			catch
 			{

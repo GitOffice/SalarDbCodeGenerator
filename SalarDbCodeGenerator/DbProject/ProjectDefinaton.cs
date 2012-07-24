@@ -22,7 +22,14 @@ namespace SalarDbCodeGenerator.DbProject
 		#endregion
 
 		#region properties
-		public float GeneratorVersion { get; set; }
+
+		private float _generatorVersion;
+		public float GeneratorVersion
+		{
+			get { return _generatorVersion; }
+			set { /* nope! this doesn't change!*/ }
+		}
+
 		public string ProjectName { get; set; }
 		public DateTime LastGeneration { get; set; }
 		public string GenerationPath { get; set; }
@@ -43,7 +50,7 @@ namespace SalarDbCodeGenerator.DbProject
 			DbSettions = new ProjectDbSettions();
 			CodeGenSettings = new ProjectCodeGenSettings();
 			RenamingOptions = new ProjectRenaming();
-			GeneratorVersion = 1.0f;
+			_generatorVersion = 2.0f;
 		}
 
 		public object Clone()

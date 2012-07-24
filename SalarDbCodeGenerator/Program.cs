@@ -7,9 +7,6 @@ namespace SalarDbCodeGenerator
 	static class Program
 	{
 		public static string[] ProgramArgs = null;
-#if DEBUG
-		//public static frmTest frm;
-#endif
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -20,7 +17,6 @@ namespace SalarDbCodeGenerator
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			ProgramArgs = args;
-			//SaveTempPatternSchema();
 #if DEBUG
 			Application.ThreadException += Application_ThreadException_Debug;
 #else
@@ -29,7 +25,6 @@ namespace SalarDbCodeGenerator
 			PleaseWait.ShowPleaseWait("Initializing Systems", true, false);
 			Application.Run(new frmCodeGen());
 		}
-
 
 		static void Application_ThreadException_Debug(object sender, System.Threading.ThreadExceptionEventArgs e)
 		{
